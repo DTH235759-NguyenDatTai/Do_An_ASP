@@ -1,24 +1,44 @@
+@{
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var isHome = ctrl == "Home" && act == "Index";
+}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <title>@ViewData["Title"] - DoAnASP</title>
 
-    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
-        .product-card { transition: all 0.3s ease; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important; }
-        .product-img { height: 200px; object-fit: cover; transition: transform 0.3s; }
-        .product-card:hover .product-img { transform: scale(1.05); }
-        .carousel-img { max-height: 400px; object-fit: cover; }
+            .product-card {
+                transition: all 0.3s ease;
+            }
+
+                .product-card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+                }
+
+            .product-img {
+                height: 200px;
+                object-fit: cover;
+                transition: transform 0.3s;
+            }
+
+            .product-card:hover .product-img {
+                transform: scale(1.05);
+            }
+
+            .hero-slide {
+                height: 400px;
+            }
     </style>
 </head>
-<body id="top">
+<body id="top" class="d-flex flex-column min-vh-100">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
@@ -27,8 +47,8 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" aria-current="page" href="@Url.Action("Index", "Home")">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Sanphams")">Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link @(isHome ? "active" : "")" href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link @(ctrl == "Sanphams" ? "active" : "")" href="@Url.Action("Index", "Sanphams")">Sản phẩm</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Giới thiệu</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Liên hệ</a></li>
                 </ul>
@@ -38,7 +58,7 @@
                         <i class="bi bi-cart3"></i> Giỏ hàng
                         @if (ViewData["CartCount"] is int cartCount && cartCount > 0)
                         {
-                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">@ViewData["CartCount"]</span>
+                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">@cartCount</span>
                         }
                     </a>
                 </div>
@@ -46,83 +66,79 @@
         </div>
     </nav>
 
-    <!-- Hero/Carousel Section -->
-    <section class="py-3">
-        <div id="heroCarousel" class="carousel slide shadow" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    @if (isHome)
+    {
+        <!-- Hero/Carousel: chỉ hiện ở trang chủ -->
+        <section class="py-3">
+            <div id="heroCarousel" class="carousel slide shadow" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="hero-slide w-100" style="background: linear-gradient(135deg, #0d6efd, #6610f2);"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3 class="fw-bold">Bộ sưu tập mới nhất</h3>
+                            <p>Khám phá xu hướng thời trang mới nhất</p>
+                            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Mua ngay</a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="hero-slide w-100" style="background: linear-gradient(135deg, #198754, #20c997);"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3 class="fw-bold">Giá tốt mỗi ngày</h3>
+                            <p>Nhiều ưu đãi hấp dẫn chờ bạn khám phá</p>
+                            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Xem ưu đãi</a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="hero-slide w-100" style="background: linear-gradient(135deg, #dc3545, #fd7e14);"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3 class="fw-bold">Giao hàng tận nơi</h3>
+                            <p>Thanh toán khi nhận hàng (COD)</p>
+                            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Mua sắm ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://via.placeholder.com/1200x400/0d6efd/ffffff?text=DoAnASP+Fashion" alt="Sản phẩm mới" class="d-block w-100 carousel-img">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h3 class="fw-bold">Bộ sưu tập mới nhất</h3>
-                        <p>Khám phá xu hướng thời trang mới nhất</p>
-                        <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Mua ngay</a>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://via.placeholder.com/1200x400/198754/ffffff?text=Sale+Up+To+50%25" alt="Khuyến mãi" class="d-block w-100 carousel-img">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h3 class="fw-bold">Giảm giá lên đến 50%</h3>
-                        <p>Nhiều ưu đãi hấp dẫn chờ bạn khám phá</p>
-                        <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Xem ưu đãi</a>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://via.placeholder.com/1200x400/dc3545/ffffff?text=Free+Shipping" alt="Miễn phí vận chuyển" class="d-block w-100 carousel-img">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h3 class="fw-bold">Miễn phí vận chuyển</h3>
-                        <p>Cho đơn hàng từ 500.000đ</p>
-                        <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg mt-2">Mua sắm ngay</a>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-        </div>
-    </section>
+        </section>
+    }
 
     <!-- Main Content -->
-    <main class="py-5">
+    <main class="py-5 flex-grow-1">
         <div class="container px-4 px-lg-5">
             @RenderBody()
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-5 bg-primary">
+    <footer class="py-5 bg-info">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 text-light">
-                    <h4>
-                        <span class="badge bg-success">D</span>
-                        <span class="badge bg-danger">o</span>
-                        <span class="badge bg-warning text-dark">A</span>
-                        <span class="badge bg-info">n</span>
-                        <span class="badge bg-secondary">A</span>
-                        <span class="badge bg-dark">S</span>
-                        <span class="badge bg-primary">P</span> - Thời trang online
-                    </h4>
+                    <h4>Thời trang online</h4>
                     <p>
                         <b><i>Địa chỉ:</i></b> 123 Đường ABC, Quận 1, TP.HCM<br>
                         <b><i>Điện thoại:</i></b> 0123 456 789<br>
                         <b><i>Email:</i></b> support@doanasp.com
                     </p>
                 </div>
-                <div class="col-md-3 text-muted">
+                <div class="col-md-3">
                     <h5 class="text-light">DANH MỤC</h5>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Quần áo nam</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Quần áo nữ</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Phụ kiện</a>
+                    @foreach (var loai in new[] { "Áo", "Quần", "Váy", "Đồ bộ", "Giày dép" })
+                    {
+                        <a href="@Url.Action("Index", "Sanphams", new { loaiSp = loai })" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">@loai</a>
+                    }
                 </div>
-                <div class="col-md-3 text-muted">
+                <div class="col-md-3">
                     <h5 class="text-light">HỖ TRỢ</h5>
                     <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Hướng dẫn mua hàng</a>
                     <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Chính sách đổi trả</a>
@@ -134,6 +150,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

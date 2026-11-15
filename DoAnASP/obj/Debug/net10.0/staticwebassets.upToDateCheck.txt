@@ -1,5 +1,7 @@
+wwwroot\css\admin.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\js\admin.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -123,3 +125,5 @@ D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\js\site.js
 D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\favicon.ico
 D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\css\site.css
+D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\css\admin.css
+D:\Code\ASP\DoAnASP\DoAnASP\wwwroot\js\admin.js

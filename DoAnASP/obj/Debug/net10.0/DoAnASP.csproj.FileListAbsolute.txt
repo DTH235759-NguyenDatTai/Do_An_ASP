@@ -299,3 +299,6 @@ D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\DoAnASP.pdb
 D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\DoAnASP.genruntimeconfig.cache
 D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\ref\DoAnASP.dll
 D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\DoAnASP.sourcelink.json
+D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\compressed\h2tqgfx2qe-{0}-ws44x69z15-ws44x69z15.gz
+D:\Code\ASP\DoAnASP\DoAnASP\obj\Debug\net10.0\compressed\prsij086ya-{0}-pnomecya2a-pnomecya2a.gz
