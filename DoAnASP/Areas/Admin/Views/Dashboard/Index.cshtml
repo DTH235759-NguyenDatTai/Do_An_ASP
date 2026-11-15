@@ -1,0 +1,223 @@
+@{
+    ViewData["Title"] = "Bảng điều khiển";
+}
+
+<h1 class="h3 mb-4">Bảng điều khiển quản trị</h1>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Tổng sản phẩm</p>
+                        <h2 class="mb-0 fw-bold">@ViewBag.TongSanPham</h2>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
+                        <i class="bi bi-box-seam fs-2 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Tổng đơn hàng</p>
+                        <h2 class="mb-0 fw-bold">@ViewBag.TongDonHang</h2>
+                    </div>
+                    <div class="bg-success bg-opacity-10 p-3 rounded-circle">
+                        <i class="bi bi-cart-check fs-2 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Tổng khách hàng</p>
+                        <h2 class="mb-0 fw-bold">@ViewBag.TongKhachHang</h2>
+                    </div>
+                    <div class="bg-info bg-opacity-10 p-3 rounded-circle">
+                        <i class="bi bi-people fs-2 text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Doanh thu (đã giao)</p>
+                        <h2 class="mb-0 fw-bold text-danger">@ViewBag.DoanhThu.ToString("N0") đ</h2>
+                    </div>
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
+                        <i class="bi bi-currency-dollar fs-2 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Cards -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 border-start border-warning border-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Đơn hàng chờ xử lý</h5>
+                        <p class="mb-0 fs-4 fw-bold">@ViewBag.DonHangMoi đơn hàng</p>
+                        <a href="@Url.Action("Index", "Donhangs", new { area = "Admin", status = "dang_xu_ly" })" class="text-decoration-none small">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 border-start border-danger border-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-exclamation-triangle fs-2 text-danger"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Sản phẩm sắp hết hàng</h5>
+                        <p class="mb-0 fs-4 fw-bold">@ViewBag.SanPhamSapHet sản phẩm</p>
+                        <a href="@Url.Action("Index", "Sanphams", new { area = "Admin" })" class="text-decoration-none small">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders & Top Products -->
+<div class="row">
+    <!-- Recent Orders -->
+    <div class="col-lg-7 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Đơn hàng mới nhất</h5>
+                <a href="@Url.Action("Index", "Donhangs", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+            </div>
+            <div class="card-body p-0">
+                @if (ViewBag.DonHangMoiNhat != null && ViewBag.DonHangMoiNhat.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dh in ViewBag.DonHangMoiNhat)
+                                {
+                                    var badgeClass = dh.TrangThai switch
+                                    {
+                                        "dang_xu_ly" => "bg-warning text-dark",
+                                        "dang_giao" => "bg-info",
+                                        "da_giao" => "bg-success",
+                                        "da_huy" => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+                                    <tr>
+                                        <td>#@dh.Id.ToString("D6")</td>
+                                        <td>
+                                            <div class="fw-medium">@dh.TenNguoinhan</div>
+                                            <small class="text-muted">@dh.IdNguoidatNavigation?.Email</small>
+                                        </td>
+                                        <td>@dh.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="fw-medium">@dh.TongTien.ToString("N0") đ</td>
+                                        <td>
+                                            <span class="badge @badgeClass px-3 py-2">
+                                                @(dh.TrangThai switch
+                                                {
+                                                    "dang_xu_ly" => "Đang xử lý",
+                                                    "dang_giao" => "Đang giao",
+                                                    "da_giao" => "Đã giao",
+                                                    "da_huy" => "Đã hủy",
+                                                    _ => dh.TrangThai
+                                                })
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Donhangs", new { area = "Admin", id = dh.Id })" class="btn btn-sm btn-outline-primary">Xem</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-inbox fs-1"></i>
+                        <p class="mt-2 mb-0">Chưa có đơn hàng nào</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Selling Products -->
+    <div class="col-lg-5 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Sản phẩm bán chạy</h5>
+                <a href="@Url.Action("SanphamBanChay", "Thongke", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+            </div>
+            <div class="card-body p-0">
+                @if (ViewBag.SpBanChay != null && ViewBag.SpBanChay.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var sp in ViewBag.SpBanChay)
+                        {
+                            <div class="list-group-item px-3 py-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="badge bg-primary bg-opacity-10 text-primary fs-6 px-3 py-2">@sp.DaBan</span>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">@sp.TenSp</h6>
+                                        <small class="text-muted">Đã bán: @sp.DaBan đơn vị</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-graph-up fs-1"></i>
+                        <p class="mt-2 mb-0">Chưa có dữ liệu bán hàng</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

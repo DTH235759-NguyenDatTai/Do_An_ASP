@@ -1,0 +1,97 @@
+@model DoAnASP.Models.Donhang
+
+@{
+    ViewData["Title"] = "Cập nhật đơn hàng #" + Model.Id.ToString("D6");
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Cập nhật đơn hàng <span class="fw-normal text-muted">#@Model.Id.ToString("D6")</span></h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Quay lại
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Cập nhật trạng thái đơn hàng</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="IdNguoidat" />
+                    <input type="hidden" asp-for="TongTien" />
+                    <input type="hidden" asp-for="NgayDat" />
+                    <input type="hidden" asp-for="TenNguoinhan" />
+                    <input type="hidden" asp-for="Sdt" />
+                    <input type="hidden" asp-for="DiaChi" />
+                    <input type="hidden" asp-for="PhuongThucTt" />
+                    <input type="hidden" asp-for="GhiChu" />
+
+                    <div class="row mb-3">
+                        <label asp-for="TrangThai" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="TrangThai" class="form-select" asp-items="@ViewBag.StatusList">
+                            </select>
+                            <span asp-validation-for="TrangThai" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-medium">Mã đơn</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext fw-medium" value="#@Model.Id.ToString("D6")" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-medium">Ngày đặt</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext" value="@Model.NgayDat.ToString("dd/MM/yyyy HH:mm")" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-medium">Khách hàng</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext" value="@Model.TenNguoinhan (@Model.IdNguoidatNavigation?.Email)" readonly />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-medium">Tổng tiền</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext fw-bold text-danger fs-5" value="@Model.TongTien.ToString("N0") đ" readonly />
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-save me-1"></i> Cập nhật
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Hủy</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

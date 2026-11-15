@@ -1,0 +1,68 @@
+@model DoAnASP.Models.Sanpham
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Xóa sản phẩm</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Quay lại
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card border-0 shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Xác nhận xóa</h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                            {
+                                <img src="@Model.HinhAnh" alt="@Model.TenSp" class="img-fluid rounded-start h-100" style="object-fit: cover; min-height: 120px;">
+                            }
+                            else
+                            {
+                                <div class="bg-light rounded-start d-flex align-items-center justify-content-center h-100" style="min-height: 120px;">
+                                    <i class="bi bi-image fs-1 text-muted"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">@Model.TenSp</h5>
+                                <p class="card-text">
+                                    <span class="badge bg-secondary me-1">@Model.LoaiSp</span>
+                                    <span class="badge @(Model.GtSp == "Nam" ? "bg-primary" : Model.GtSp == "Nữ" ? "bg-danger" : "bg-info text-dark")">@Model.GtSp</span>
+                                </p>
+                                <p class="card-text text-danger fw-bold fs-5">@Model.Gia.ToString("N0") đ</p>
+                                <p class="card-text"><small class="text-muted">Số lượng: @Model.Soluong | Ngày đăng: @Model.NgayDang.ToString("dd/MM/yyyy")</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Lưu ý:</strong> Hành động này không thể hoàn tác. Sản phẩm sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu.
+                </div>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger flex-grow-1">
+                            <i class="bi bi-trash me-1"></i> Xóa vĩnh viễn
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

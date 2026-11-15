@@ -1,0 +1,102 @@
+@model DoAnASP.Models.Sanpham
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Chi tiết sản phẩm</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning me-2">
+            <i class="bi bi-pencil me-1"></i> Chỉnh sửa
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">@Model.TenSp</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center">
+                        @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                        {
+                            <img src="@Model.HinhAnh" alt="@Model.TenSp" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                        }
+                        else
+                        {
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                                <i class="bi bi-image fs-1 text-muted"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <span class="badge bg-secondary fs-6 px-3 py-2 me-2">@Model.LoaiSp</span>
+                            <span class="badge @(Model.GtSp == "Nam" ? "bg-primary" : Model.GtSp == "Nữ" ? "bg-danger" : "bg-info text-dark") fs-6 px-3 py-2">@Model.GtSp</span>
+                        </div>
+                        <h3 class="text-danger fw-bold mb-3">@Model.Gia.ToString("N0") đ</div>
+
+                        <div class="mb-3">
+                            <label class="fw-medium">Số lượng tồn kho:</label>
+                            @if (Model.Soluong == 0)
+                            {
+                                <span class="badge bg-danger fs-6 ms-2">Hết hàng</span>
+                            }
+                            else if (Model.Soluong <= 5)
+                            {
+                                <span class="badge bg-warning text-dark fs-6 ms-2">@Model.Soluong (Sắp hết)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success fs-6 ms-2">@Model.Soluong</span>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="fw-medium">Loại sản phẩm (AR):</label>
+                            @if (!string.IsNullOrEmpty(Model.ProductType))
+                            {
+                                <span class="badge bg-info text-dark fs-6 ms-2">@Model.ProductType</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted ms-2">Chưa phân loại</span>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="fw-medium">Ngày đăng:</label>
+                            <span class="text-muted ms-2">@Model.NgayDang.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="fw-medium">Mô tả sản phẩm</h6>
+                @if (!string.IsNullOrEmpty(Model.MoTa))
+                {
+                    <p class="text-muted">@Model.MoTa</p>
+                }
+                else
+                {
+                    <p class="text-muted fst-italic">Chưa có mô tả</p>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.TryonImage))
+                {
+                    <hr>
+                    <h6 class="fw-medium">Hình ảnh thử đồ (AR)</h6>
+                    <img src="@Model.TryonImage" alt="Tryon" class="img-fluid rounded shadow-sm" style="max-height: 200px;">
+                }
+            </div>
+        </div>
+    </div>
+</div>

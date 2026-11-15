@@ -1,0 +1,151 @@
+@model DoAnASP.Models.Sanpham
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Thêm sản phẩm mới</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Quay lại
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Thông tin sản phẩm</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <label asp-for="TenSp" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="TenSp" class="form-control" placeholder="Nhập tên sản phẩm" />
+                            <span asp-validation-for="TenSp" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="LoaiSp" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="LoaiSp" class="form-select" asp-items="@(new SelectList(ViewBag.LoaiSpList))">
+                                <option value="">-- Chọn loại --</option>
+                            </select>
+                            <span asp-validation-for="LoaiSp" class="text-danger"></span>
+                            <div class="form-text">Hoặc nhập loại mới</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="GtSp" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="GtSp" class="form-select">
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                                <option value="Unisex" selected>Unisex</option>
+                                <option value="Trẻ em">Trẻ em</option>
+                            </select>
+                            <span asp-validation-for="GtSp" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="Soluong" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="Soluong" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="Soluong" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="Gia" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input asp-for="Gia" class="form-control" type="number" step="1000" min="0" placeholder="Ví dụ: 250000" />
+                                <span class="input-group-text">đ</span>
+                            </div>
+                            <span asp-validation-for="Gia" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="HinhAnh" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="HinhAnh" class="form-control" placeholder="URL hình ảnh hoặc đường dẫn file" />
+                            <span asp-validation-for="HinhAnh" class="text-danger"></span>
+                            <div class="form-text">Nhập URL hình ảnh (ví dụ: https://example.com/image.jpg hoặc /images/product.jpg)</div>
+                            @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.HinhAnh" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="MoTa" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Mô tả chi tiết sản phẩm..."></textarea>
+                            <span asp-validation-for="MoTa" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="TryonImage" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="TryonImage" class="form-control" placeholder="URL hình ảnh thử đồ (tùy chọn)" />
+                            <span asp-validation-for="TryonImage" class="text-danger"></span>
+                            <div class="form-text">Hình ảnh cho tính năng thử đồ ảo (AR)</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="ProductType" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="ProductType" class="form-select">
+                                <option value="">-- Chọn loại --</option>
+                                <option value="ao">Áo</option>
+                                <option value="quan">Quần</option>
+                                <option value="dam">Đầm</option>
+                                <option value="phukien">Phụ kiện</option>
+                            </select>
+                            <span asp-validation-for="ProductType" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label asp-for="TryonType" class="col-sm-2 col-form-label fw-medium"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="TryonType" class="form-select">
+                                <option value="">-- Chọn loại --</option>
+                                <option value="upper_body">Thân trên</option>
+                                <option value="lower_body">Thân dưới</option>
+                                <option value="full_body">Toàn thân</option>
+                                <option value="accessory">Phụ kiện</option>
+                            </select>
+                            <span asp-validation-for="TryonType" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-save me-1"></i> Lưu sản phẩm
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
