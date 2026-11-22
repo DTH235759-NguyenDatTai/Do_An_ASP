@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoAnASP.Models;
@@ -13,9 +14,39 @@ public class SanphamsController : Controller
     }
 
     // GET: SANPHAMS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index(string searchString, string loaiSp, int? page)
     {
-        return View(await _context.Sanphams.ToListAsync());
+        var sanphams = _context.Sanphams.AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            sanphams = sanphams.Where(s => s.TenSp.Contains(searchString) || (s.MoTa != null && s.MoTa.Contains(searchString)));
+        }
+
+        if (!string.IsNullOrEmpty(loaiSp))
+        {
+            sanphams = sanphams.Where(s => s.LoaiSp == loaiSp);
+        }
+
+        ViewBag.SearchString = searchString;
+        ViewBag.LoaiSp = loaiSp;
+        ViewBag.LoaiSpList = await _context.Sanphams.Select(s => s.LoaiSp).Distinct().ToListAsync();
+
+        int pageSize = 12;
+        int pageNumber = page ?? 1;
+
+        var totalItems = await sanphams.CountAsync();
+        var items = await sanphams
+            .OrderByDescending(s => s.NgayDang)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        ViewBag.CurrentPage = pageNumber;
+        ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        ViewBag.TotalItems = totalItems;
+
+        return View(items);
     }
 
     // GET: SANPHAMS/Details/5
@@ -37,6 +68,7 @@ public class SanphamsController : Controller
     }
 
     // GET: SANPHAMS/Create
+    [Authorize(Roles = "admin")]
     public IActionResult Create()
     {
         return View();
@@ -47,6 +79,7 @@ public class SanphamsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Create([Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType,Chitietdonhangs")] Sanpham sanpham)
     {
         if (ModelState.IsValid)
@@ -59,6 +92,7 @@ public class SanphamsController : Controller
     }
 
     // GET: SANPHAMS/Edit/5
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -79,6 +113,7 @@ public class SanphamsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType,Chitietdonhangs")] Sanpham sanpham)
     {
         if (id != sanpham.Id)
@@ -110,6 +145,7 @@ public class SanphamsController : Controller
     }
 
     // GET: SANPHAMS/Delete/5
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -130,6 +166,7 @@ public class SanphamsController : Controller
     // POST: SANPHAMS/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var sanpham = await _context.Sanphams.FindAsync(id);

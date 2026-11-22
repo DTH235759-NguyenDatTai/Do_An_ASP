@@ -1,0 +1,148 @@
+@model DoAnASP.Models.Taikhoan
+
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person me-2"></i>Hồ sơ cá nhân</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form method="post" asp-action="Profile" asp-controller="Account">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-medium">Họ và tên <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="name" name="Name" value="@Model.Name" required autocomplete="name" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-medium">Email <span class="text-muted">(không thể thay đổi)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" value="@Model.Email" readonly />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sdt" class="form-label">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                <input type="tel" class="form-control" id="sdt" name="Sdt" value="@Model.Sdt" autocomplete="tel" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="diaChi" class="form-label">Địa chỉ</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                <input type="text" class="form-control" id="diaChi" name="DiaChi" value="@Model.DiaChi" autocomplete="address-line1" />
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Vai trò</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-shield"></i></span>
+                                <input type="text" class="form-control" value="@Model.Role" readonly />
+                            </div>
+                            <div class="form-text">Vai trò: @(Model.Role == "admin" ? "Quản trị viên" : "Khách hàng")</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Ngày tham gia</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                <input type="text" class="form-control" value="@Model.NgayTao.ToString("dd/MM/yyyy")" readonly />
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="mt-4" />
+
+                    <div class="text-center">
+                        <p class="text-muted mb-2">Đổi mật khẩu</p>
+                        <a href="#" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                            <i class="bi bi-key me-1"></i> Thay đổi mật khẩu
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel"><i class="bi bi-key me-2"></i>Thay đổi mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="@Url.Action("ChangePassword", "Account")">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label fw-medium">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required autocomplete="current-password" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label fw-medium">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required autocomplete="new-password" minlength="6" />
+                        <div class="form-text">Ít nhất 6 ký tự</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmNewPassword" class="form-label fw-medium">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required autocomplete="new-password" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật mật khẩu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const newPassword = document.getElementById('newPassword');
+            const confirmNewPassword = document.getElementById('confirmNewPassword');
+
+            function validatePasswords() {
+                if (confirmNewPassword.value && newPassword.value !== confirmNewPassword.value) {
+                    confirmNewPassword.setCustomValidity('Mật khẩu không khớp');
+                } else {
+                    confirmNewPassword.setCustomValidity('');
+                }
+            }
+
+            newPassword.addEventListener('input', validatePasswords);
+            confirmNewPassword.addEventListener('input', validatePasswords);
+        });
+    </script>
+}

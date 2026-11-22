@@ -1,8 +1,10 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DoAnASP.Models;
 
+[Authorize(Roles = "admin")]
 public class DonhangsController : Controller
 {
     private readonly QlquanaoContext _context;
