@@ -57,19 +57,10 @@
                 </ul>
                 <div class="d-flex align-items-center gap-2">
                     <partial name="_LoginPartial" />
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light position-relative dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="btn btn-outline-light position-relative" asp-controller="Cart" asp-action="Index">
                             <i class="bi bi-cart3"></i> Giỏ hàng
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" id="cartCountBadge" style="display: none;">0</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-lg" id="cartDropdown" style="width: 350px; max-height: 400px; overflow-y: auto;">
-                            <div class="text-center py-3">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -121,17 +112,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             loadCartCount();
 
-            // Load cart dropdown content when opened
-            const cartDropdown = document.getElementById('cartDropdown');
-            const cartDropdownToggle = cartDropdown?.previousElementSibling;
-
-            if (cartDropdownToggle) {
-                cartDropdownToggle.addEventListener('click', function () {
-                    if (cartDropdown && cartDropdown.querySelector('.spinner-border')) {
-                        loadCartDropdown();
-                    }
-                });
-            }
         });
 
         function loadCartCount() {
@@ -145,18 +125,6 @@
                     }
                 })
                 .catch(error => console.error('Error loading cart count:', error));
-        }
-
-        function loadCartDropdown() {
-            fetch('/Cart/ViewCart')
-                .then(response => response.text())
-                .then(html => {
-                    const dropdown = document.getElementById('cartDropdown');
-                    if (dropdown) {
-                        dropdown.innerHTML = html;
-                    }
-                })
-                .catch(error => console.error('Error loading cart dropdown:', error));
         }
 
         // Update cart count after add to cart

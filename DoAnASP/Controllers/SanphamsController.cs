@@ -111,7 +111,7 @@ public class SanphamsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> Create([Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType,Chitietdonhangs")] Sanpham sanpham)
+    public async Task<IActionResult> Create([Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,Chitietdonhangs")] Sanpham sanpham)
     {
         if (ModelState.IsValid)
         {
@@ -145,7 +145,7 @@ public class SanphamsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType,Chitietdonhangs")] Sanpham sanpham)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,Chitietdonhangs")] Sanpham sanpham)
     {
         if (id != sanpham.Id)
         {

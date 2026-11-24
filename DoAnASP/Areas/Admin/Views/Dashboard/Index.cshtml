@@ -6,7 +6,7 @@
 
 <!-- Stats Cards -->
 <div class="row mb-4">
-    <div class="col-xl-3 col-md-6 mb-3">
+    <div class="col-xl-4 col-md-6 mb-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-3">
+    <div class="col-xl-4 col-md-6 mb-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-3">
+    <div class="col-xl-4 col-md-6 mb-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -54,21 +54,6 @@
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Doanh thu (đã giao)</p>
-                        <h2 class="mb-0 fw-bold text-danger">@ViewBag.DoanhThu.ToString("N0") đ</h2>
-                    </div>
-                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle">
-                        <i class="bi bi-currency-dollar fs-2 text-danger"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Alert Cards -->
@@ -108,10 +93,10 @@
     </div>
 </div>
 
-<!-- Recent Orders & Top Products -->
+<!-- Recent Orders -->
 <div class="row">
     <!-- Recent Orders -->
-    <div class="col-lg-7 mb-4">
+    <div class="col-12 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Đơn hàng mới nhất</h5>
@@ -186,44 +171,4 @@
         </div>
     </div>
 
-    <!-- Top Selling Products -->
-    <div class="col-lg-5 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Sản phẩm bán chạy</h5>
-                <a href="@Url.Action("SanphamBanChay", "Thongke", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
-            </div>
-            <div class="card-body p-0">
-                @{
-    var spBanChay = ViewBag.SpBanChay as System.Collections.Generic.IEnumerable<DoAnASP.Models.VSpBanchay>;
-}
-@if (spBanChay != null && spBanChay.Any())
-                {
-                    <div class="list-group list-group-flush">
-                        @foreach (var sp in spBanChay)
-                        {
-                            <div class="list-group-item px-3 py-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <span class="badge bg-primary bg-opacity-10 text-primary fs-6 px-3 py-2">@sp.DaBan</span>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1">@sp.TenSp</h6>
-                                        <small class="text-muted">Đã bán: @sp.DaBan đơn vị</small>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center py-4 text-muted">
-                        <i class="bi bi-graph-up fs-1"></i>
-                        <p class="mt-2 mb-0">Chưa có dữ liệu bán hàng</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
 </div>

@@ -116,7 +116,7 @@
                             </div>
                             <div class="text-end">
                                 <div class="fw-medium">@ct.DonGia.ToString("N0") đ</div>
-                                <small class="text-muted">Thành tiền: @(ct.SoLuong * ct.DonGia).ToString("N0") đ</small>
+                                <small class="text-muted">Thành tiền: @((ct.SoLuong * ct.DonGia).ToString("N0")) đ</small>
                             </div>
                         </div>
                         <hr class="my-2">
@@ -187,7 +187,7 @@
                                         <td>
                                             @if (!string.IsNullOrEmpty(ct.IdSanphamNavigation?.HinhAnh))
                                             {
-                                                <img src="@ct.IdSanphamNavigation.HinhAnh" alt="@ct.IdSanphamNavigation.TenSp" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                                <img src="@ImageUrlHelper.GetUrl(ct.IdSanphamNavigation.HinhAnh)" alt="@ct.IdSanphamNavigation.TenSp" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                                             }
                                             else
                                             {
@@ -202,7 +202,7 @@
                                         </td>
                                         <td class="fw-medium">@ct.DonGia.ToString("N0") đ</td>
                                         <td>@ct.SoLuong</td>
-                                        <td class="fw-medium text-danger">@(ct.SoLuong * ct.DonGia).ToString("N0") đ</td>
+                                        <td class="fw-medium text-danger">@((ct.SoLuong * ct.DonGia).ToString("N0")) đ</td>
                                     </tr>
                                 }
                             </tbody>

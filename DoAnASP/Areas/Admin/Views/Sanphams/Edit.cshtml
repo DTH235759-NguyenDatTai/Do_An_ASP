@@ -83,7 +83,7 @@
                             @if (!string.IsNullOrEmpty(Model.HinhAnh))
                             {
                                 <div class="mt-2">
-                                    <img src="@Model.HinhAnh" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                                    <img src="@ImageUrlHelper.GetUrl(Model.HinhAnh)" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
                                 </div>
                             }
                         </div>
@@ -94,50 +94,6 @@
                         <div class="col-sm-10">
                             <textarea asp-for="MoTa" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="MoTa" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label asp-for="TryonImage" class="col-sm-2 col-form-label fw-medium"></label>
-                        <div class="col-sm-10">
-                            <input type="file" name="TryonImageFile" class="form-control" accept="image/*" />
-                            <span asp-validation-for="TryonImage" class="text-danger"></span>
-                            <div class="form-text">Chọn file ảnh thử đồ mới (để trống nếu giữ nguyên) hoặc nhập URL bên dưới</div>
-                            <input asp-for="TryonImage" class="form-control mt-2" placeholder="Hoặc nhập URL hình ảnh thử đồ" />
-                            @if (!string.IsNullOrEmpty(Model.TryonImage))
-                            {
-                                <div class="mt-2">
-                                    <img src="@Model.TryonImage" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label asp-for="ProductType" class="col-sm-2 col-form-label fw-medium"></label>
-                        <div class="col-sm-10">
-                            <select asp-for="ProductType" class="form-select">
-                                <option value="">-- Chọn loại --</option>
-                                <option value="ao">Áo</option>
-                                <option value="quan">Quần</option>
-                                <option value="dam">Đầm</option>
-                                <option value="phukien">Phụ kiện</option>
-                            </select>
-                            <span asp-validation-for="ProductType" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label asp-for="TryonType" class="col-sm-2 col-form-label fw-medium"></label>
-                        <div class="col-sm-10">
-                            <select asp-for="TryonType" class="form-select">
-                                <option value="">-- Chọn loại --</option>
-                                <option value="upper_body">Thân trên</option>
-                                <option value="lower_body">Thân dưới</option>
-                                <option value="full_body">Toàn thân</option>
-                                <option value="accessory">Phụ kiện</option>
-                            </select>
-                            <span asp-validation-for="TryonType" class="text-danger"></span>
                         </div>
                     </div>
 

@@ -93,7 +93,7 @@
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.HinhAnh))
                                     {
-                                        <img src="@item.HinhAnh" alt="@item.TenSp" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <img src="@ImageUrlHelper.GetUrl(item.HinhAnh)" alt="@item.TenSp" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
                                     }
                                     else
                                     {

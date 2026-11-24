@@ -16,20 +16,6 @@ namespace DoAnASP.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Best Sellers - from v_sp_banchay view joined with Sanphams
-            var bestSellerIds = await _context.VSpBanchays
-                .OrderByDescending(v => v.DaBan)
-                .Take(8)
-                .Select(v => v.Id)
-                .ToListAsync();
-
-            var bestSellerProducts = await _context.Sanphams
-                .Where(s => bestSellerIds.Contains(s.Id) && s.Soluong > 0)
-                .ToListAsync();
-            var bestSellers = bestSellerProducts
-                .OrderByDescending(s => bestSellerIds.IndexOf(s.Id))
-                .ToList();
-
             // New Arrivals - latest products
             var newArrivals = await _context.Sanphams
                 .Where(s => s.Soluong > 0)
@@ -37,7 +23,6 @@ namespace DoAnASP.Controllers
                 .Take(8)
                 .ToListAsync();
 
-            ViewBag.BestSellers = bestSellers;
             ViewBag.NewArrivals = newArrivals;
 
             return View();

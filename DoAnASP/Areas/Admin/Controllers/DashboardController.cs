@@ -23,10 +23,6 @@ namespace DoAnASP.Areas.Admin.Controllers
             var tongDonHang = await _context.Donhangs.CountAsync();
             var tongKhachHang = await _context.Taikhoans.CountAsync();
 
-            var doanhThu = await _context.Donhangs
-                .Where(d => d.TrangThai == "da_giao")
-                .SumAsync(d => (decimal?)d.TongTien) ?? 0;
-
             var donHangMoi = await _context.Donhangs
                 .Where(d => d.TrangThai == "dang_xu_ly")
                 .CountAsync();
@@ -42,21 +38,12 @@ namespace DoAnASP.Areas.Admin.Controllers
                 .Take(5)
                 .ToListAsync();
 
-            // 5 sản phẩm bán chạy nhất
-            var spBanChay = await _context.VSpBanchays
-                .OrderByDescending(v => v.DaBan)
-                .Take(5)
-                .ToListAsync();
-
             ViewBag.TongSanPham = tongSanPham;
             ViewBag.TongDonHang = tongDonHang;
             ViewBag.TongKhachHang = tongKhachHang;
-            ViewBag.DoanhThu = doanhThu;
             ViewBag.DonHangMoi = donHangMoi;
             ViewBag.SanPhamSapHet = sanPhamSapHet;
             ViewBag.DonHangMoiNhat = donHangMoiNhat;
-            ViewBag.SpBanChay = spBanChay;
-
             return View();
         }
     }

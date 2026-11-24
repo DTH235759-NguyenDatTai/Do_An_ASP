@@ -35,10 +35,6 @@
 - [x] Xóa thư mục `Views/Donhang/`, `Views/Chitietdonhang/`, `Views/Taikhoan/`
 - [x] Xóa `Views/Sanphams/Create.cshtml`, `Edit.cshtml`, `Delete.cshtml` (gốc - chỉ dùng Area Admin)
 
-### 1.3 Admin Thống kê (ThongkeController + Views)
-- [x] Tạo `Areas/Admin/Views/Thongke/Index.cshtml` - Dashboard doanh thu với Chart.js
-- [x] Tạo `Areas/Admin/Views/Thongke/SanphamBanChay.cshtml` - Top sản phẩm bán chạy
-- [x] Sửa model `VSpBanchay` (case sensitivity)
 
 ### 1.4 Layout & Navigation
 - [x] Đăng ký `LayoutSelectorFilter` global trong `Program.cs`
@@ -114,13 +110,11 @@
 ### 3.3 Home/Index.cshtml (Redesign hoàn toàn)
 - [x] Hero section gradient + CTA
 - [x] Danh mục 5 cột: Áo, Quần, Váy, Đồ bộ, Giày dép
-- [x] Sản phẩm bán chạy (từ `v_sp_banchay`)
 - [x] Sản phẩm mới (theo `NgayDang` desc)
 - [x] Features: ship free, đổi trả, COD, support 24/7
 
 ### 3.4 HomeController
 - [x] Inject `QlquanaoContext`
-- [x] Load `BestSellers` từ `VSpBanchay` join `Sanphams`
 - [x] Load `NewArrivals` từ `Sanphams` order by `NgayDang` desc
 
 ---
@@ -128,7 +122,7 @@
 ## ✅ PHASE 4: POLISH & EXTRAS (Hoàn thành)
 
 ### 4.1 Admin Product Image Upload
-- [x] Thêm `IFormFile` parameters (`HinhAnhFile`, `TryonImageFile`) trong Admin `SanphamsController`
+- [x] Thêm `IFormFile` parameter (`HinhAnhFile`) trong Admin `SanphamsController`
 - [x] `SaveImageAsync`: validate extension, size (5MB), unique filename (Guid)
 - [x] `DeleteImage`: xóa file cũ khi cập nhật/xóa
 - [x] Soft delete: check `Chitietdonhangs` trước khi xóa
@@ -158,11 +152,7 @@
 - [x] `HomeController.NotFound()` action
 - [x] `UseStatusCodePagesWithReExecute("/Home/NotFound")` trong `Program.cs`
 
-### 4.6 Quyết định: TryonImage, ProductType, TryonType
-- [x] **GIỮ LẠI** các trường trong model `Sanpham`
-- [x] Lý do: hỗ trợ AR thử đồ tương lai, không ảnh hưởng chức năng hiện tại
-
-### 4.7 Documentation
+### 4.6 Documentation
 - [x] `README.md` - tài liệu dự án đầy đủ
 - [x] `PROJECT_PROGRESS.md` - file này
 
@@ -173,7 +163,6 @@
 | Lỗi | Nguyên nhân | Giải pháp |
 |-----|-------------|-----------|
 | `CS0246: AuthorizeAttribute not found` | Gỡ Identity package | `Authorize` thuộc `Microsoft.AspNetCore.Mvc.Core` (transitive) - OK |
-| `CS0234: VSpBanChay not found` | Case sensitivity | Sửa thành `VSpBanchay` |
 | `CS1501: ToString overload` | Nullable DateOnly/decimal | Dùng `?.ToString("format")` hoặc kiểm tra null |
 | `CS8625: Nullable warning _LayoutAdmin` | `Active()` param null | Dùng `""` thay vì `null` |
 | `BLAZOR102: Scoped CSS` | File `_Layout.cshtml.css` orphan | Xóa file |
@@ -209,8 +198,6 @@
 - `Views/Shared/NotFound.cshtml` (MỚI)
 - `Areas/Admin/Views/Sanphams/Create.cshtml` (Sửa: file upload)
 - `Areas/Admin/Views/Sanphams/Edit.cshtml` (Sửa: file upload)
-- `Areas/Admin/Views/Thongke/Index.cshtml` (MỚI)
-- `Areas/Admin/Views/Thongke/SanphamBanChay.cshtml` (MỚI)
 - `Views/Cart/Index.cshtml` (Sửa: checkout link, token)
 - `Views/Cart/_CartPartial.cshtml` (Sửa: checkout link, model)
 

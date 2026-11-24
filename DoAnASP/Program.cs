@@ -1,10 +1,12 @@
 using DoAnASP.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+var appStartedAt = DateTimeOffset.UtcNow;
 
 builder.Services.AddControllersWithViews();
 
@@ -17,6 +19,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";            // chưa đăng nhập -> về đây
         options.AccessDeniedPath = "/Account/AccessDenied"; // đăng nhập nhưng sai quyền -> về đây
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = false;
+        options.Events.OnValidatePrincipal = context =>
+        {
+            if (context.Properties.IssuedUtc is { } issuedUtc && issuedUtc < appStartedAt)
+            {
+                context.RejectPrincipal();
+                return context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+
+            return Task.CompletedTask;
+        };
     });
 
 // Add session support (cần cho giỏ hàng CartController)

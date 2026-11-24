@@ -26,21 +26,12 @@
                 <h5 class="mb-0">Cập nhật trạng thái đơn hàng</h5>
             </div>
             <div class="card-body">
-                <form asp-action="Edit">
+                <form asp-action="Edit" asp-route-id="@Model.Id">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="IdNguoidat" />
-                    <input type="hidden" asp-for="TongTien" />
-                    <input type="hidden" asp-for="NgayDat" />
-                    <input type="hidden" asp-for="TenNguoinhan" />
-                    <input type="hidden" asp-for="Sdt" />
-                    <input type="hidden" asp-for="DiaChi" />
-                    <input type="hidden" asp-for="PhuongThucTt" />
-                    <input type="hidden" asp-for="GhiChu" />
-
                     <div class="row mb-3">
-                        <label asp-for="TrangThai" class="col-sm-2 col-form-label fw-medium"></label>
+                        <label asp-for="TrangThai" class="col-sm-2 col-form-label fw-medium">Trạng thái</label>
                         <div class="col-sm-10">
                             <select asp-for="TrangThai" class="form-select" asp-items="@ViewBag.StatusList">
                             </select>

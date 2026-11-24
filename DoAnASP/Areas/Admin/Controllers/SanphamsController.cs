@@ -65,13 +65,13 @@ namespace DoAnASP.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewBag.LoaiSpList = _context.Sanphams.Select(s => s.LoaiSp).Distinct().ToList();
-            return View();
+            return View(new Sanpham());
         }
 
         // POST: Admin/Sanphams/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType")] Sanpham sanpham, IFormFile? HinhAnhFile, IFormFile? TryonImageFile)
+        public async Task<IActionResult> Create([Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang")] Sanpham sanpham, IFormFile? HinhAnhFile)
         {
             if (ModelState.IsValid)
             {
@@ -79,12 +79,6 @@ namespace DoAnASP.Areas.Admin.Controllers
                 if (HinhAnhFile != null && HinhAnhFile.Length > 0)
                 {
                     sanpham.HinhAnh = await SaveImageAsync(HinhAnhFile);
-                }
-
-                // Handle tryon image upload
-                if (TryonImageFile != null && TryonImageFile.Length > 0)
-                {
-                    sanpham.TryonImage = await SaveImageAsync(TryonImageFile);
                 }
 
                 sanpham.NgayDang = DateTime.Now;
@@ -117,7 +111,7 @@ namespace DoAnASP.Areas.Admin.Controllers
         // POST: Admin/Sanphams/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang,TryonImage,ProductType,TryonType")] Sanpham sanpham, IFormFile? HinhAnhFile, IFormFile? TryonImageFile)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,TenSp,LoaiSp,GtSp,Soluong,Gia,HinhAnh,MoTa,NgayDang")] Sanpham sanpham, IFormFile? HinhAnhFile)
         {
             if (id != sanpham.Id)
             {
@@ -149,22 +143,6 @@ namespace DoAnASP.Areas.Admin.Controllers
                     {
                         // Keep existing image
                         sanpham.HinhAnh = existingProduct.HinhAnh;
-                    }
-
-                    // Handle tryon image upload
-                    if (TryonImageFile != null && TryonImageFile.Length > 0)
-                    {
-                        // Delete old tryon image if it's a local file
-                        if (!string.IsNullOrEmpty(existingProduct.TryonImage) && existingProduct.TryonImage.StartsWith("/images/"))
-                        {
-                            DeleteImage(existingProduct.TryonImage);
-                        }
-                        sanpham.TryonImage = await SaveImageAsync(TryonImageFile);
-                    }
-                    else
-                    {
-                        // Keep existing tryon image
-                        sanpham.TryonImage = existingProduct.TryonImage;
                     }
 
                     // Preserve original NgayDang
@@ -233,10 +211,6 @@ namespace DoAnASP.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(sanpham.HinhAnh) && sanpham.HinhAnh.StartsWith("/images/"))
                     {
                         DeleteImage(sanpham.HinhAnh);
-                    }
-                    if (!string.IsNullOrEmpty(sanpham.TryonImage) && sanpham.TryonImage.StartsWith("/images/"))
-                    {
-                        DeleteImage(sanpham.TryonImage);
                     }
                     _context.Sanphams.Remove(sanpham);
                     TempData["SuccessMessage"] = "Xóa sản phẩm thành công!";

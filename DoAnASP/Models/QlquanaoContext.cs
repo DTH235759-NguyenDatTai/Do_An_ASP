@@ -27,8 +27,6 @@ public partial class QlquanaoContext : DbContext
 
     public virtual DbSet<VDoanhthuNgay> VDoanhthuNgays { get; set; }
 
-    public virtual DbSet<VSpBanchay> VSpBanchays { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("Vietnamese_CI_AS");
@@ -140,22 +138,10 @@ public partial class QlquanaoContext : DbContext
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_sanpham_ngaydang")
                 .HasColumnName("ngay_dang");
-            entity.Property(e => e.ProductType)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("product_type");
             entity.Property(e => e.Soluong).HasColumnName("soluong");
             entity.Property(e => e.TenSp)
                 .HasMaxLength(150)
                 .HasColumnName("ten_sp");
-            entity.Property(e => e.TryonImage)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("tryon_image");
-            entity.Property(e => e.TryonType)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tryon_type");
         });
 
         modelBuilder.Entity<Taikhoan>(entity =>
@@ -233,19 +219,6 @@ public partial class QlquanaoContext : DbContext
                 .HasColumnName("doanh_thu");
             entity.Property(e => e.Ngay).HasColumnName("ngay");
             entity.Property(e => e.SoDon).HasColumnName("so_don");
-        });
-
-        modelBuilder.Entity<VSpBanchay>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("v_sp_banchay");
-
-            entity.Property(e => e.DaBan).HasColumnName("da_ban");
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.TenSp)
-                .HasMaxLength(150)
-                .HasColumnName("ten_sp");
         });
 
         OnModelCreatingPartial(modelBuilder);

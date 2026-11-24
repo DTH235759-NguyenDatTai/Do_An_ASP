@@ -82,9 +82,9 @@ namespace DoAnASP.Areas.Admin.Controllers
         // POST: Admin/Donhangs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,IdNguoidat,TongTien,NgayDat,TrangThai,TenNguoinhan,Sdt,DiaChi,PhuongThucTt,GhiChu")] Donhang donhangInput)
+        public async Task<IActionResult> Edit(int? id, string trangThai)
         {
-            if (id != donhangInput.Id)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -99,48 +99,43 @@ namespace DoAnASP.Areas.Admin.Controllers
             }
 
             var oldStatus = donhang.TrangThai;
-            var newStatus = donhangInput.TrangThai;
+            var newStatus = trangThai?.Trim();
 
             // Validate status transition
             var allowedTransitions = GetAllowedStatusTransitions(oldStatus);
             if (!allowedTransitions.Any(s => s.Value == newStatus))
             {
-                ModelState.AddModelError("TrangThai", $"Không thể chuyển từ '{GetStatusText(oldStatus)}' sang '{GetStatusText(newStatus)}'.");
+                ModelState.AddModelError("TrangThai", $"Không thể chuyển từ '{GetStatusText(oldStatus)}' sang '{GetStatusText(newStatus ?? string.Empty)}'.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                using var transaction = await _context.Database.BeginTransactionAsync();
-                try
-                {
-                    // Update other fields
-                    donhang.TenNguoinhan = donhangInput.TenNguoinhan;
-                    donhang.Sdt = donhangInput.Sdt;
-                    donhang.DiaChi = donhangInput.DiaChi;
-                    donhang.PhuongThucTt = donhangInput.PhuongThucTt;
-                    donhang.GhiChu = donhangInput.GhiChu;
-
-                    // Handle status change with stock restoration
-                    if (oldStatus != newStatus)
-                    {
-                        await HandleStatusChange(donhang, oldStatus, newStatus);
-                    }
-
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-
-                    TempData["SuccessMessage"] = "Cáº­p nháº­t đơn hÃ ng thÃ nh công!";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    ModelState.AddModelError("", "Đã có lỗi xảy ra: " + ex.Message);
-                }
+                ViewBag.StatusList = GetAllowedStatusTransitions(oldStatus);
+                return View(donhang);
             }
 
-            ViewBag.StatusList = GetAllowedStatusTransitions(donhang.TrangThai);
-            return View(donhang);
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                if (oldStatus != newStatus)
+                {
+                    await HandleStatusChange(donhang, oldStatus, newStatus!);
+                    donhang.TrangThai = newStatus!;
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["SuccessMessage"] = "Cập nhật trạng thái thành công!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                ModelState.AddModelError("", "Đã có lỗi xảy ra: " + ex.Message);
+                ViewBag.StatusList = GetAllowedStatusTransitions(donhang.TrangThai);
+                return View(donhang);
+            }
         }
 
         private List<SelectListItem> GetAllowedStatusTransitions(string currentStatus)
@@ -153,7 +148,7 @@ namespace DoAnASP.Areas.Admin.Controllers
             {
                 "dang_xu_ly" => new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "dang_xu_ly", Text = "Đang xá»­ lý", Selected = true },
+                    new SelectListItem { Value = "dang_xu_ly", Text = "Đang xử lý", Selected = true },
                     new SelectListItem { Value = "da_giao", Text = "\u0110\u00e3 giao" },
                     new SelectListItem { Value = "huy", Text = "Đã hủy" }
                 },
@@ -176,7 +171,7 @@ namespace DoAnASP.Areas.Admin.Controllers
         {
             return status switch
             {
-                "dang_xu_ly" => "Đang xá»­ lý",
+                "dang_xu_ly" => "Đang xử lý",
                 "da_giao" => "Đã giao",
                 "huy" => "Đã hủy",
                 _ => status

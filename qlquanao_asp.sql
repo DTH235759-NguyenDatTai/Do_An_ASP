@@ -7,17 +7,10 @@
 USE master;
 GO
 
-IF DB_ID(N'qlquanao') IS NOT NULL
-BEGIN
-    ALTER DATABASE qlquanao SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE qlquanao;
-END
+CREATE DATABASE QLquanaoAsp COLLATE Vietnamese_CI_AS;
 GO
 
-CREATE DATABASE qlquanao COLLATE Vietnamese_CI_AS;
-GO
-
-USE qlquanao;
+USE QLquanaoAsp;
 GO
 
 /* ---------------------------------------------------------------------
@@ -51,13 +44,9 @@ CREATE TABLE sanpham (
     hinh_anh     VARCHAR(255)  NULL,
     mo_ta        NVARCHAR(MAX) NULL,
     ngay_dang    DATETIME2(0)  NOT NULL CONSTRAINT DF_sanpham_ngaydang DEFAULT SYSDATETIME(),
-    tryon_image  VARCHAR(255)  NULL,
-    product_type VARCHAR(10)   NULL,
-    tryon_type   VARCHAR(50)   NULL,
     CONSTRAINT PK_sanpham PRIMARY KEY (id),
     CONSTRAINT CK_sanpham_soluong CHECK (soluong >= 0),
     CONSTRAINT CK_sanpham_gia CHECK (gia >= 0),
-    CONSTRAINT CK_sanpham_producttype CHECK (product_type IS NULL OR product_type IN ('shirt','pants','shoes'))
 );
 GO
 CREATE INDEX IX_sanpham_loai ON sanpham(loai_sp);
@@ -117,10 +106,7 @@ GO
 -- Đã bỏ ký tự thừa "\r\n" ở cuối hash của admin (làm đăng nhập bị sai).
 SET IDENTITY_INSERT taikhoan ON;
 INSERT INTO taikhoan (id, name, email, [password], role) VALUES
-(1, N'admin',  N'admin@gmail.com',   '$2y$10$7R8Ts4FCQwOwDsuvL1gN2uG9DAcHx1kp8L.ar8rWb3vZff5JeeDdS', N'admin'),
-(2, N'Tai',    N'tai27@gmail.com',   '$2y$10$dUEiJSFEkPTxDFGzU4nq6e5DRt1oKk5rkTdPv9ExNTQmwVDP0RsSO', N'admin'),
-(3, N'Trân',   N'tran17@gmail.com',  '$2y$10$Npa/J5TtBn6kPOPaUBUnPuFGybDclG449EcUUmtj5qdvzj3Z/HvNC', N'user'),
-(4, N'DatTai', N'tai2710@gmail.com', '$2y$10$7R8Ts4FCQwOwDsuvL1gN2uG9DAcHx1kp8L.ar8rWb3vZff5JeeDdS', N'user');
+(1, N'admin',  N'admin@gmail.com',   '$2y$10$7R8Ts4FCQwOwDsuvL1gN2uG9DAcHx1kp8L.ar8rWb3vZff5JeeDdS', N'admin')
 SET IDENTITY_INSERT taikhoan OFF;
 GO
 
@@ -146,23 +132,23 @@ GO
 
 SET IDENTITY_INSERT donhang ON;
 INSERT INTO donhang (id, id_nguoidat, tong_tien, ngay_dat, trang_thai) VALUES
-(2,  2, 1195000, '2025-11-19T06:08:49', 'da_giao'),
-(3,  3, 345000,  '2025-11-19T11:38:48', 'da_giao'),
-(4,  3, 30000,   '2025-11-19T11:58:33', 'huy'),
-(5,  3, 30000,   '2025-11-19T15:38:27', 'da_giao'),
-(6,  3, 345000,  '2025-11-19T15:45:55', 'da_giao'),
-(7,  2, 30000,   '2025-11-19T16:15:03', 'da_giao'),
-(8,  2, 850000,  '2025-11-19T16:23:00', 'da_giao'),
-(9,  3, 30000,   '2025-11-19T16:39:54', 'da_giao'),
-(10, 2, 345000,  '2025-11-19T17:05:38', 'da_giao'),
-(11, 2, 30000,   '2025-11-19T17:31:47', 'da_giao'),
-(12, 2, 550000,  '2025-11-19T17:35:16', 'da_giao'),
-(13, 2, 850000,  '2025-11-20T07:15:26', 'da_giao'),
-(14, 2, 850000,  '2025-11-20T07:24:42', 'da_giao'),
-(15, 2, 880000,  '2025-11-20T07:33:26', 'da_giao'),
+(2,  1, 1195000, '2025-11-19T06:08:49', 'da_giao'),
+(3,  1, 345000,  '2025-11-19T11:38:48', 'da_giao'),
+(4,  1, 30000,   '2025-11-19T11:58:33', 'huy'),
+(5,  1, 30000,   '2025-11-19T15:38:27', 'da_giao'),
+(6,  1, 345000,  '2025-11-19T15:45:55', 'da_giao'),
+(7,  1, 30000,   '2025-11-19T16:15:03', 'da_giao'),
+(8,  1, 850000,  '2025-11-19T16:23:00', 'da_giao'),
+(9,  1, 30000,   '2025-11-19T16:39:54', 'da_giao'),
+(10, 1, 345000,  '2025-11-19T17:05:38', 'da_giao'),
+(11, 1, 30000,   '2025-11-19T17:31:47', 'da_giao'),
+(12, 1, 550000,  '2025-11-19T17:35:16', 'da_giao'),
+(13, 1, 850000,  '2025-11-20T07:15:26', 'da_giao'),
+(14, 1, 850000,  '2025-11-20T07:24:42', 'da_giao'),
+(15, 1, 880000,  '2025-11-20T07:33:26', 'da_giao'),
 (16, 1, 150000,  '2025-11-20T07:48:49', 'da_giao'),
 (17, 1, 50000,   '2025-11-20T08:07:14', 'da_giao'),
-(18, 2, 1730000, '2025-11-20T08:23:11', 'da_giao'),
+(18, 1, 1730000, '2025-11-20T08:23:11', 'da_giao'),
 (19, 1, 495000,  '2025-11-21T01:28:22', 'da_giao'),
 (20, 1, 150000,  '2025-11-21T01:29:22', 'da_giao');
 SET IDENTITY_INSERT donhang OFF;
@@ -217,16 +203,6 @@ SELECT CAST(ngay_dat AS DATE) AS ngay, COUNT(*) AS so_don, SUM(tong_tien) AS doa
 FROM donhang
 WHERE trang_thai <> 'huy'
 GROUP BY CAST(ngay_dat AS DATE);
-GO
-
--- Sản phẩm bán chạy (không tính đơn đã hủy).
--- Khi dùng, sắp xếp ở câu truy vấn: SELECT * FROM v_sp_banchay ORDER BY da_ban DESC;
-CREATE VIEW v_sp_banchay AS
-SELECT s.id, s.ten_sp, SUM(c.so_luong) AS da_ban
-FROM chitietdonhang c
-JOIN donhang d ON d.id = c.id_donhang AND d.trang_thai <> 'huy'
-JOIN sanpham s ON s.id = c.id_sanpham
-GROUP BY s.id, s.ten_sp;
 GO
 
 /* =====================================================================

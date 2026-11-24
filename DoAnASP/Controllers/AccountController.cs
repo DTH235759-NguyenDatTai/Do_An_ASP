@@ -46,7 +46,10 @@ namespace DoAnASP.Controllers
                 new(ClaimTypes.Role, user.Role.Trim())
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                new AuthenticationProperties { IsPersistent = false, AllowRefresh = false });
 
             // 3) Kiểm tra role để chuyển trang
             if (user.Role.Trim() == "admin")
@@ -173,7 +176,10 @@ namespace DoAnASP.Controllers
                     new(ClaimTypes.Role, user.Role.Trim())
                 };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity),
+                    new AuthenticationProperties { IsPersistent = false, AllowRefresh = false });
 
                 TempData["SuccessMessage"] = "Cập nhật hồ sơ thành công!";
                 return RedirectToAction(nameof(Profile));

@@ -22,7 +22,7 @@ DoAnASP là một website thương mại điện tử bán quần áo được x
 ## ✨ Tính năng chính
 
 ### 🛍️ Khách hàng (Customer)
-- **Trang chủ**: Banner, danh mục sản phẩm, sản phẩm bán chạy, sản phẩm mới
+- **Trang chủ**: Banner, danh mục sản phẩm, sản phẩm mới
 - **Danh sách sản phẩm**: Tìm kiếm, lọc theo danh mục, sắp xếp giá, phân trang
 - **Chi tiết sản phẩm**: Gallery ảnh, chọn số lượng, thêm vào giỏ, mua ngay, sản phẩm liên quan
 - **Giỏ hàng**: Thêm/sửa/xóa, cập nhật số lượng, tóm tắt đơn hàng
@@ -32,12 +32,10 @@ DoAnASP là một website thương mại điện tử bán quần áo được x
 - **Đăng ký/Đăng nhập**: Validation email, xác nhận mật khẩu, rate limiting
 
 ### 👨‍💼 Quản trị (Admin)
-- **Dashboard**: Thống kê doanh thu, đơn hàng, khách hàng, sản phẩm
+- **Dashboard**: Thống kê đơn hàng, khách hàng, sản phẩm
 - **Quản lý sản phẩm**: CRUD, upload ảnh, soft delete
 - **Quản lý đơn hàng**: Xem, cập nhật trạng thái, khôi phục kho khi hủy
 - **Quản lý khách hàng**: Xem danh sách, sửa thông tin, khóa/mở tài khoản, reset mật khẩu
-- **Thống kê doanh thu**: Biểu đồ doanh thu theo ngày (Chart.js)
-- **Sản phẩm bán chạy**: Top sản phẩm theo số lượng bán
 
 ## 📁 Cấu trúc dự án
 
@@ -46,7 +44,7 @@ DoAnASP/
 ├── Areas/
 │   └── Admin/
 │       ├── Controllers/       # Admin controllers
-│       └── Views/             # Admin views (Dashboard, Sanphams, Donhangs, Khachhangs, Thongke)
+│       └── Views/             # Admin views (Dashboard, Sanphams, Donhangs, Khachhangs)
 ├── Controllers/               # Customer controllers (Home, Account, Cart, Orders, Sanphams)
 ├── Models/                    # Entity models, DbContext, CartItem
 ├── Views/
@@ -70,13 +68,11 @@ DoAnASP/
 
 ### Các bảng chính
 - **Taikhoan**: Người dùng (khách hàng, admin)
-- **Sanpham**: Sản phẩm (hỗ trợ TryonImage, ProductType, TryonType cho AR)
+- **Sanpham**: Sản phẩm
 - **Donhang**: Đơn hàng
 - **Chitietdonhang**: Chi tiết đơn hàng
 
 ### Các View báo cáo
-- **v_doanhthu_ngay**: Doanh thu theo ngày
-- **v_sp_banchay**: Sản phẩm bán chạy
 - **v_chitiet_donhang**: Chi tiết đơn hàng cho báo cáo
 
 ### Tài khoản mặc định (password: 123456)
@@ -125,13 +121,6 @@ dotnet run
 - Đăng nhập admin: `admin@doanasp.com` / `123456`
 
 ## 📝 Các quyết định thiết kế
-
-### TryonImage, ProductType, TryonType
-Đã quyết định **GIỮ LẠI** các trường này trong model `Sanpham` vì:
-- Hỗ trợ tính năng **thử đồ ảo (AR)** trong tương lai
-- `ProductType`: Phân loại cho AR (ao, quan, dam, phukien)
-- `TryonType`: Loại thử đồ (upper_body, lower_body, full_body, accessory)
-- Không ảnh hưởng đến chức năng hiện tại, mở rộng dễ dàng
 
 ### Soft Delete cho sản phẩm
 - Sản phẩm có đơn hàng liên quan **không xóa vật lý**
