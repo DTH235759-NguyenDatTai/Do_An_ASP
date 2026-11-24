@@ -6,15 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Admin Dashboard - DoAnASP">
     <meta name="author" content="DoAnASP">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="~/favicon.ico" />
 
     <title>Trang quản trị - DoAnASP</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="~/css/admin.css" rel="stylesheet">
 
     <style>
@@ -46,15 +43,15 @@
             // Lấy controller / action / tham số hiện tại để tô sáng mục đang mở
             var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
             var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
-            var status = Context.Request.Query["status"].ToString();
-            var role = Context.Request.Query["role"].ToString();
+            var status = Context.Request.Query["status"].ToString() ?? "";
+            var role = Context.Request.Query["role"].ToString() ?? "";
 
-            string Active(string c, string a = null, string s = null, string r = null)
+            string Active(string c, string a = "", string s = "", string r = "")
             {
                 if (!string.Equals(ctrl, c, StringComparison.OrdinalIgnoreCase)) return "";
-                if (a != null && !string.Equals(act, a, StringComparison.OrdinalIgnoreCase)) return "";
-                if (s != null && s != status) return "";
-                if (r != null && r != role) return "";
+                if (!string.IsNullOrEmpty(a) && !string.Equals(act, a, StringComparison.OrdinalIgnoreCase)) return "";
+                if (!string.IsNullOrEmpty(s) && s != status) return "";
+                if (!string.IsNullOrEmpty(r) && r != role) return "";
                 return "active";
             }
 
@@ -141,15 +138,15 @@
 
                     <li class="sidebar-header text-primary">TÀI KHOẢN</li>
 
-                    <li class="sidebar-item @Active("Taikhoans", "Index", null, "user")">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Taikhoans", new { area = "Admin", role = "user" })">
+                    <li class="sidebar-item @Active("Khachhangs", "Index", "", "user")">
+                        <a class="sidebar-link" href="@Url.Action("Index", "Khachhangs", new { area = "Admin", role = "user" })">
                             <i class="bi bi-people align-middle me-2"></i>
                             <span class="align-middle">Khách hàng</span>
                         </a>
                     </li>
 
-                    <li class="sidebar-item @Active("Taikhoans", "Index", null, "admin")">
-                        <a class="sidebar-link" href="@Url.Action("Index", "Taikhoans", new { area = "Admin", role = "admin" })">
+                    <li class="sidebar-item @Active("Khachhangs", "Index", "", "admin")">
+                        <a class="sidebar-link" href="@Url.Action("Index", "Khachhangs", new { area = "Admin", role = "admin" })">
                             <i class="bi bi-person-badge align-middle me-2"></i>
                             <span class="align-middle">Quản trị viên</span>
                         </a>
@@ -215,7 +212,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="@Url.Action("Index", "Taikhoans", new { area = "Admin", role = "user" })" class="list-group-item list-group-item-action">
+                                    <a href="@Url.Action("Index", "Khachhangs", new { area = "Admin", role = "user" })" class="list-group-item list-group-item-action">
                                         <div class="d-flex align-items-center">
                                             <div class="me-3 text-primary"><i class="bi bi-info-circle-fill fs-4"></i></div>
                                             <div>
@@ -313,16 +310,16 @@
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="#"><strong>DoAnASP</strong></a> - Hệ thống quản trị
+                                <a class="text-muted" href="@Url.Action("Index", "Home", new { area = "" })" target="_blank"><strong>DoAnASP</strong></a> - Hệ thống quản trị
                             </p>
                         </div>
                         <div class="col-6 text-end">
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Hỗ trợ</a>
+                                    <a class="text-muted" href="@Url.Action("Contact", "Home", new { area = "" })" target="_blank">Hỗ trợ</a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Tài liệu</a>
+                                    <a class="text-muted" href="@Url.Action("ReturnPolicy", "Home", new { area = "" })" target="_blank">Chính sách</a>
                                 </li>
                             </ul>
                         </div>

@@ -14,7 +14,7 @@ public class SanphamsController : Controller
     }
 
     // GET: SANPHAMS
-    public async Task<IActionResult> Index(string searchString, string loaiSp, int? page)
+    public async Task<IActionResult> Index(string searchString, string loaiSp, string sort, int? page)
     {
         var sanphams = _context.Sanphams.AsQueryable();
 
@@ -28,8 +28,17 @@ public class SanphamsController : Controller
             sanphams = sanphams.Where(s => s.LoaiSp == loaiSp);
         }
 
+        // Sắp xếp
+        sanphams = sort switch
+        {
+            "price_asc" => sanphams.OrderBy(s => s.Gia),
+            "price_desc" => sanphams.OrderByDescending(s => s.Gia),
+            _ => sanphams.OrderByDescending(s => s.NgayDang) // Mặc định: mới nhất
+        };
+
         ViewBag.SearchString = searchString;
         ViewBag.LoaiSp = loaiSp;
+        ViewBag.Sort = sort;
         ViewBag.LoaiSpList = await _context.Sanphams.Select(s => s.LoaiSp).Distinct().ToListAsync();
 
         int pageSize = 12;
@@ -37,7 +46,6 @@ public class SanphamsController : Controller
 
         var totalItems = await sanphams.CountAsync();
         var items = await sanphams
-            .OrderByDescending(s => s.NgayDang)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -64,7 +72,30 @@ public class SanphamsController : Controller
             return NotFound();
         }
 
+        // Load related products (same category, excluding current)
+        var relatedProducts = await _context.Sanphams
+            .Where(s => s.LoaiSp == sanpham.LoaiSp && s.Id != sanpham.Id && s.Soluong > 0)
+            .OrderByDescending(s => s.NgayDang)
+            .Take(4)
+            .ToListAsync();
+
+        ViewBag.RelatedProducts = relatedProducts;
+
         return View(sanpham);
+    }
+
+    // GET: Sanphams/GetSoldCount/5
+    public async Task<IActionResult> GetSoldCount(int id)
+    {
+        var soldCount = await _context.Chitietdonhangs
+            .Where(c => c.IdSanpham == id)
+            .Join(_context.Donhangs.Where(d => d.TrangThai != "huy"),
+                  c => c.IdDonhang,
+                  d => d.Id,
+                  (c, d) => c.SoLuong)
+            .SumAsync();
+
+        return Json(new { count = soldCount });
     }
 
     // GET: SANPHAMS/Create

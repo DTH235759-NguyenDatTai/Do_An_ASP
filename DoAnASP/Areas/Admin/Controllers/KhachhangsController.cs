@@ -79,17 +79,44 @@ namespace DoAnASP.Areas.Admin.Controllers
         // POST: Admin/Khachhangs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Email,Password,Role,Sdt,DiaChi,NgayTao")] Taikhoan khachhang)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Email,Role,Sdt,DiaChi")] Taikhoan khachhangInput)
         {
-            if (id != khachhang.Id)
+            if (id != khachhangInput.Id)
             {
                 return NotFound();
+            }
+
+            var khachhang = await _context.Taikhoans.FindAsync(id);
+            if (khachhang == null)
+            {
+                return NotFound();
+            }
+
+            // Không cho admin tự hạ quyền của chính mình
+            var currentUserId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0");
+            if (khachhang.Id == currentUserId && khachhangInput.Role != khachhang.Role)
+            {
+                ModelState.AddModelError("Role", "Không thể thay đổi quyền của chính mình.");
+            }
+
+            // Kiểm tra email không trùng
+            if (await _context.Taikhoans.AnyAsync(t => t.Email == khachhangInput.Email && t.Id != khachhang.Id))
+            {
+                ModelState.AddModelError("Email", "Email này đã được sử dụng bởi tài khoản khác.");
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Chỉ cập nhật các trường cho phép
+                    khachhang.Name = khachhangInput.Name;
+                    khachhang.Email = khachhangInput.Email;
+                    khachhang.Role = khachhangInput.Role;
+                    khachhang.Sdt = khachhangInput.Sdt;
+                    khachhang.DiaChi = khachhangInput.DiaChi;
+                    // KHÔNG cập nhật Password ở đây
+
                     _context.Update(khachhang);
                     await _context.SaveChangesAsync();
                     TempData["SuccessMessage"] = "Cập nhật khách hàng thành công!";
@@ -108,6 +135,30 @@ namespace DoAnASP.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(khachhang);
+        }
+
+        // POST: Admin/Khachhangs/ResetPassword/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(int id, string newPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 6)
+            {
+                TempData["ErrorMessage"] = "Mật khẩu mới phải có ít nhất 6 ký tự.";
+                return RedirectToAction(nameof(Edit), new { id });
+            }
+
+            var khachhang = await _context.Taikhoans.FindAsync(id);
+            if (khachhang == null)
+            {
+                return NotFound();
+            }
+
+            khachhang.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Đặt lại mật khẩu thành công!";
+            return RedirectToAction(nameof(Edit), new { id });
         }
 
         private bool KhachhangExists(int? id)

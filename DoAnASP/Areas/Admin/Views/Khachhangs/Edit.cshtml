@@ -91,6 +91,36 @@
     </div>
 </div>
 
+<!-- Reset Password Section -->
+<div class="row mt-4">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Đặt lại mật khẩu</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="ResetPassword" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Bạn có chắc muốn đặt lại mật khẩu cho khách hàng này?');">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label fw-medium">Mật khẩu mới</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="newPassword" class="form-control" required minlength="6" />
+                            <div class="form-text">Tối thiểu 6 ký tự</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-key me-1"></i> Đặt lại mật khẩu
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

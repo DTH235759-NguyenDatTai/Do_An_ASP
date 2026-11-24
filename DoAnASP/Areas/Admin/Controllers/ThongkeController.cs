@@ -29,6 +29,7 @@ namespace DoAnASP.Areas.Admin.Controllers
             // Convert to DateOnly for comparison with VDoanhthuNgay.Ngay
             var fromDateOnly = DateOnly.FromDateTime(fromDate.Value);
             var toDateOnly = DateOnly.FromDateTime(toDate.Value);
+            var toDateExclusive = toDate.Value.Date.AddDays(1);
 
             // Doanh thu theo ngày
             var doanhThuNgay = await _context.VDoanhthuNgays
@@ -38,17 +39,17 @@ namespace DoAnASP.Areas.Admin.Controllers
 
             // Tổng doanh thu
             var tongDoanhThu = await _context.Donhangs
-                .Where(d => d.TrangThai == "da_giao" && d.NgayDat >= fromDate && d.NgayDat <= toDate)
+                .Where(d => d.TrangThai == "da_giao" && d.NgayDat >= fromDate && d.NgayDat < toDateExclusive)
                 .SumAsync(d => (decimal?)d.TongTien) ?? 0;
 
             // Tổng đơn hàng
             var tongDonHang = await _context.Donhangs
-                .Where(d => d.NgayDat >= fromDate && d.NgayDat <= toDate)
+                .Where(d => d.NgayDat >= fromDate && d.NgayDat < toDateExclusive)
                 .CountAsync();
 
             // Đơn hàng đã giao
             var donHangDaGiao = await _context.Donhangs
-                .Where(d => d.TrangThai == "da_giao" && d.NgayDat >= fromDate && d.NgayDat <= toDate)
+                .Where(d => d.TrangThai == "da_giao" && d.NgayDat >= fromDate && d.NgayDat < toDateExclusive)
                 .CountAsync();
 
             ViewBag.TongDoanhThu = tongDoanhThu;

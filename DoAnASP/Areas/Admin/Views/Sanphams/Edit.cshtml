@@ -76,9 +76,10 @@
                     <div class="row mb-3">
                         <label asp-for="HinhAnh" class="col-sm-2 col-form-label fw-medium"></label>
                         <div class="col-sm-10">
-                            <input asp-for="HinhAnh" class="form-control" />
+                            <input type="file" name="HinhAnhFile" class="form-control" accept="image/*" />
                             <span asp-validation-for="HinhAnh" class="text-danger"></span>
-                            <div class="form-text">Nhập URL hình ảnh</div>
+                            <div class="form-text">Chọn file ảnh mới (để trống nếu giữ nguyên) hoặc nhập URL bên dưới</div>
+                            <input asp-for="HinhAnh" class="form-control mt-2" placeholder="Hoặc nhập URL hình ảnh" />
                             @if (!string.IsNullOrEmpty(Model.HinhAnh))
                             {
                                 <div class="mt-2">
@@ -99,9 +100,16 @@
                     <div class="row mb-3">
                         <label asp-for="TryonImage" class="col-sm-2 col-form-label fw-medium"></label>
                         <div class="col-sm-10">
-                            <input asp-for="TryonImage" class="form-control" />
+                            <input type="file" name="TryonImageFile" class="form-control" accept="image/*" />
                             <span asp-validation-for="TryonImage" class="text-danger"></span>
-                            <div class="form-text">Hình ảnh cho tính năng thử đồ ảo (AR)</div>
+                            <div class="form-text">Chọn file ảnh thử đồ mới (để trống nếu giữ nguyên) hoặc nhập URL bên dưới</div>
+                            <input asp-for="TryonImage" class="form-control mt-2" placeholder="Hoặc nhập URL hình ảnh thử đồ" />
+                            @if (!string.IsNullOrEmpty(Model.TryonImage))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.TryonImage" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            }
                         </div>
                     </div>
 

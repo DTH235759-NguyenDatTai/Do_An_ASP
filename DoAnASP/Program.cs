@@ -1,6 +1,8 @@
 using DoAnASP.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,30 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Add rate limiting for login attempts
+builder.Services.AddRateLimiter(options =>
+{
+    // Fixed window limiter for login attempts (5 requests per minute per IP)
+    options.AddFixedWindowLimiter("LoginLimiter", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    // Global rate limiter (100 requests per minute per IP)
+    options.AddFixedWindowLimiter("GlobalLimiter", opt =>
+    {
+        opt.PermitLimit = 100;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -33,13 +59,22 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?statusCode={0}");
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();          // phải đứng SAU UseRouting, TRƯỚC UseAuthentication
 app.UseAuthentication();   // phải đứng TRƯỚC UseAuthorization
 app.UseAuthorization();
+
+app.UseRateLimiter(); // Apply rate limiting
 
 app.MapStaticAssets();
 

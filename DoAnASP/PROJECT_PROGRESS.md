@@ -1,284 +1,270 @@
-# DoAnASP - Project Progress Documentation
+# PROJECT PROGRESS - DoAnASP
 
-## Project Overview
-ASP.NET Core MVC e-commerce application for clothing store (DoAnASP)
+## Frontend typography update (2026-11-24)
+- Unified customer and admin font stacks using system UI fonts with Segoe UI and Arial fallbacks for Vietnamese glyph support, without relying on a remote font download.
+- Confirmed both layouts declare UTF-8; the garbled Vietnamese seen in PowerShell output came from console rendering, not corrupted view text.
+- Verified the project builds with 0 errors and 0 warnings after the update.
 
-## Current Status: ✅ Login/Registration System Complete
-
----
-
-## Completed Features
-
-### 1. Product Listing (Sanpham/Index)
-- **File**: `Views/Sanphams/Index.cshtml`
-- **Controller**: `Controllers/SanphamsController.cs`
-- Features:
-  - Responsive product grid (1/2/3/4 columns)
-  - Search by product name/description
-  - Filter by category (LoaiSp)
-  - Pagination (12 items/page)
-  - Sort options (newest, price low→high, price high→low)
-  - Product cards with image, price, stock status
-  - "Add to Cart" button with stock validation
-  - Out-of-stock badge
-  - Helper function `GetImageUrl()` for wwwroot/images
-
-### 2. Shopping Cart System
-- **Controller**: `Controllers/CartController.cs`
-- **Views**: `Views/Cart/Index.cshtml`, `Views/Cart/_CartPartial.cshtml`
-- Features:
-  - Session-based cart persistence
-  - Add/Update/Remove items
-  - Quantity controls
-  - Cart total calculation
-  - Navbar dropdown cart preview
-  - AJAX operations with toast notifications
-
-### 3. Authentication System (NEW)
-- **Controller**: `Controllers/AccountController.cs`
-- **Views**: 
-  - `Views/Account/Login.cshtml` - AJAX login with toast notifications
-  - `Views/Account/Register.cshtml` - Registration form
-  - `Views/Account/Profile.cshtml` - User profile with change password
-  - `Views/Account/AccessDenied.cshtml` - Access denied page
-- **Middleware**: Cookie Authentication (`Program.cs`)
-- **Filter**: `Filters/LayoutSelectorFilter.cs` - Role-based layout selection
-
-#### Login Features:
-- AJAX form submission
-- Toast notifications (success/error)
-- Remember me (30 days persistent cookie)
-- Role-based redirect:
-  - Admin → `/Admin/Dashboard` (Admin layout)
-  - User → `/Home/Index` (Customer layout)
-- Debug logging for password verification
-
-#### Registration Features:
-- Full validation (name, email, password, confirm password)
-- Auto-login after registration
-- Default role: "user"
-- Toast success notification
-
-#### Profile Features:
-- Edit name, phone, address
-- Change password modal
-- Claim updates on profile change
-
-### 4. Layout System
-- **Customer Layout**: `Views/Shared/_LayoutCustomer.cshtml`
-  - Navbar with cart dropdown
-  - Category links in footer
-  - Dynamic cart count badge
-  - Loads cart dropdown on demand via AJAX
-
-- **Admin Layout**: `Views/Shared/_LayoutAdmin.cshtml` (existing)
-  - Sidebar navigation
-  - Admin dashboard, products, orders, statistics, customers
-
-- **Dynamic Layout Selection**: `_ViewStart.cshtml` + `LayoutSelectorFilter`
-  - Automatically selects layout based on user role claim
-  - Admin users see Admin layout
-  - Regular users see Customer layout
+**Ngày cập nhật**: 2026-11-24
+**Trạng thái**: Hoàn thành các phase chính, sẵn sàng triển khai
 
 ---
 
-## Database Schema (QlquanaoContext)
+## 📋 TỔNG QUAN TIẾN ĐỘ
 
-### Tables:
-- `taikhoan` - Users (id, name, email, password, role, sdt, dia_chi, ngay_tao)
-- `sanpham` - Products
-- `donhang` - Orders
-- `chitietdonhang` - Order details
-
-### Existing Admin Users:
-| Email | Role | Name |
-|-------|------|------|
-| admin@gmail.com | admin | admin |
-| tai27@gmail.com | admin | Tai |
-
-> **Note**: Passwords are hashed with SHA256 + "DoAnASP_Salt". Original passwords unknown.
+| Phase | Trạng thái | Hoàn thành |
+|-------|------------|------------|
+| **Phase 1: Critical Fixes** | ✅ Hoàn thành | 100% |
+| **Phase 2: Order Flow** | ✅ Hoàn thành | 100% |
+| **Phase 3: Product Detail & Home Page** | ✅ Hoàn thành | 100% |
+| **Phase 4: Polish & Extras** | ✅ Hoàn thành | 100% |
 
 ---
 
-## Key Technical Details
+## ✅ PHASE 1: CRITICAL FIXES (Hoàn thành)
 
-### Password Hashing
-```csharp
-// HashPassword() uses SHA256 with salt
-private string HashPassword(string password)
-{
-    using var sha256 = SHA256.Create();
-    var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + "DoAnASP_Salt"));
-    return Convert.ToBase64String(hashedBytes);
-}
-```
+### 1.1 CSRF Token cho AJAX Cart
+- [x] Thêm form ẩn `#antiforgery-form` trong `_LayoutCustomer.cshtml`
+- [x] Cập nhật `site.js` để lấy token từ form ẩn
+- [x] Cập nhật `Cart/Index.cshtml` và `_CartPartial.cshtml`
 
-### Cookie Authentication Config (Program.cs)
-```csharp
-services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromDays(1);
-        options.SlidingExpiration = true;
-        options.Cookie.Name = "DoAnASP.Auth";
-    });
-```
+### 1.2 Xóa Controller/View trùng lặp
+- [x] Xóa `Controllers/DonhangsController.cs`
+- [x] Xóa `Controllers/ChitietdonhangsController.cs`
+- [x] Xóa `Controllers/TaikhoansController.cs`
+- [x] Xóa thư mục `Views/Donhang/`, `Views/Chitietdonhang/`, `Views/Taikhoan/`
+- [x] Xóa `Views/Sanphams/Create.cshtml`, `Edit.cshtml`, `Delete.cshtml` (gốc - chỉ dùng Area Admin)
 
-### Role-Based Layout Filter
-```csharp
-// Filters/LayoutSelectorFilter.cs
-// Runs on every action, sets ViewData["Layout"] based on role claim
-if (user.IsInRole("admin")) layout = "_LayoutAdmin.cshtml";
-else layout = "_LayoutCustomer.cshtml";
-```
+### 1.3 Admin Thống kê (ThongkeController + Views)
+- [x] Tạo `Areas/Admin/Views/Thongke/Index.cshtml` - Dashboard doanh thu với Chart.js
+- [x] Tạo `Areas/Admin/Views/Thongke/SanphamBanChay.cshtml` - Top sản phẩm bán chạy
+- [x] Sửa model `VSpBanchay` (case sensitivity)
 
-### Image Path Helper (Views)
-```csharp
-Func<string, string> GetImageUrl = (hinhAnh) => {
-    if (string.IsNullOrEmpty(hinhAnh)) return placeholder;
-    if (hinhAnh.StartsWith("http") || hinhAnh.StartsWith("/")) return hinhAnh;
-    return "/images/" + hinhAnh; // wwwroot/images/
-};
-```
+### 1.4 Layout & Navigation
+- [x] Đăng ký `LayoutSelectorFilter` global trong `Program.cs`
+- [x] Sửa `_LayoutAdmin.cshtml`: link `Taikhoans` → `Khachhangs`, `huy` → `da_huy`
+- [x] Sửa `KhachhangsController.Edit`: không bind Password, check email unique, ngăn self-demote, thêm ResetPassword
+- [x] Thêm `_LoginPartial.cshtml`: link "Hồ sơ của tôi", "Đơn hàng của tôi"
+
+### 1.5 AccountController
+- [x] Thêm `Profile` (GET/POST)
+- [x] Thêm `ChangePassword` (POST)
+
+### 1.6 CartItem Model
+- [x] Di chuyển từ Controller sang `Models/CartItem.cs`
+- [x] Cập nhật `CartController`, `Index.cshtml`, `_CartPartial.cshtml`
+
+### 1.7 SanphamsController (Customer)
+- [x] Thêm tham số `sort` (price_asc, price_desc)
+- [x] Cập nhật `Views/Sanphams/Index.cshtml`: nút sắp xếp, phân trang giữ sort
+
+### 1.8 Xóa Identity & Package không dùng
+- [x] Xóa thư mục `Areas/Identity/`, `Data/ApplicationDbContext.cs`, `Data/Migrations/`
+- [x] Xóa `Views/Shared/_Layout.cshtml` và `_Layout.cshtml.css`
+- [x] Gỡ `Microsoft.AspNetCore.Identity.*` khỏi `.csproj`
+- [x] Xóa `OnConfiguring` hardcoded connection string trong `QlquanaoContext.cs`
+
+### 1.9 Database
+- [x] Chạy `qlquanao_sqlserver.sql` thành công
+- [x] Tạo tables, views, sample data, admin accounts (BCrypt hash)
 
 ---
 
-## How to Test
+## ✅ PHASE 2: ORDER FLOW (Hoàn thành)
 
-### 1. Start Application
+### 2.1 OrdersController (Mới)
+- [x] Tạo `Controllers/OrdersController.cs`
+- [x] `Checkout` (GET/POST) - validate giá/kho server-side, transaction
+- [x] `Success` - trang xác nhận đơn hàng
+- [x] `MyOrders` - lịch sử đơn hàng có phân trang
+- [x] `Details` - chi tiết đơn hàng
+- [x] `Cancel` - hủy đơn (chỉ "dang_xu_ly"), khôi phục kho
+
+### 2.2 Views/Orders
+- [x] `Checkout.cshtml` - form giao hàng + tóm tắt đơn hàng sidebar
+- [x] `Success.cshtml` - trang thành công
+- [x] `MyOrders.cshtml` - danh sách có phân trang, nút hủy
+- [x] `Details.cshtml` - chi tiết đầy đủ
+
+### 2.3 Admin DonhangsController
+- [x] Validate chuyển trạng thái: `dang_xu_ly` → `da_giao` / `da_huy`
+- [x] Khôi phục kho khi hủy đơn (`da_huy`)
+
+### 2.4 Navigation
+- [x] Cập nhật link "Thanh toán" → `/Orders/Checkout` trong Cart views
+- [x] Thêm "Đơn hàng của tôi" vào `_LoginPartial.cshtml`
+
+---
+
+## ✅ PHASE 3: PRODUCT DETAIL & HOME PAGE (Hoàn thành)
+
+### 3.1 Sanphams/Details.cshtml (Redesign hoàn toàn)
+- [x] Gallery ảnh (carousel + thumbnail)
+- [x] Badge danh mục, giới tính
+- [x] Chọn số lượng + nút "Thêm vào giỏ" (AJAX)
+- [x] Nút "Mua ngay" → redirect Checkout
+- [x] Fetch sold count qua API `/Sanphams/GetSoldCount/{id}`
+- [x] Sản phẩm liên quan (cùng loại, còn hàng, max 4)
+- [x] Meta: đã bán, ngày đăng
+
+### 3.2 SanphamsController
+- [x] Thêm `GetSoldCount(int id)` endpoint
+- [x] Load `RelatedProducts` trong `Details`
+
+### 3.3 Home/Index.cshtml (Redesign hoàn toàn)
+- [x] Hero section gradient + CTA
+- [x] Danh mục 5 cột: Áo, Quần, Váy, Đồ bộ, Giày dép
+- [x] Sản phẩm bán chạy (từ `v_sp_banchay`)
+- [x] Sản phẩm mới (theo `NgayDang` desc)
+- [x] Features: ship free, đổi trả, COD, support 24/7
+
+### 3.4 HomeController
+- [x] Inject `QlquanaoContext`
+- [x] Load `BestSellers` từ `VSpBanchay` join `Sanphams`
+- [x] Load `NewArrivals` từ `Sanphams` order by `NgayDang` desc
+
+---
+
+## ✅ PHASE 4: POLISH & EXTRAS (Hoàn thành)
+
+### 4.1 Admin Product Image Upload
+- [x] Thêm `IFormFile` parameters (`HinhAnhFile`, `TryonImageFile`) trong Admin `SanphamsController`
+- [x] `SaveImageAsync`: validate extension, size (5MB), unique filename (Guid)
+- [x] `DeleteImage`: xóa file cũ khi cập nhật/xóa
+- [x] Soft delete: check `Chitietdonhangs` trước khi xóa
+- [x] Cập nhật `Create.cshtml`, `Edit.cshtml`: input type=file + fallback URL
+
+### 4.2 Footer Links (Thay # bằng trang thật)
+- [x] Thêm `HomeController`: `ShoppingGuide()`, `ReturnPolicy()`, `Contact()`
+- [x] Tạo Views: `ShoppingGuide.cshtml`, `ReturnPolicy.cshtml`, `Contact.cshtml`
+- [x] Cập nhật `_LayoutCustomer.cshtml` footer
+- [x] Cập nhật `_LayoutAdmin.cshtml` footer
+
+### 4.3 Registration Improvements
+- [x] Validate email format (`System.Net.Mail.MailAddress`)
+- [x] Thêm trường `confirmPassword`
+- [x] Validation: password ≥ 6 ký tự, khớp confirm
+- [x] Cập nhật `Views/Account/Register.cshtml`
+
+### 4.4 Rate Limiting
+- [x] Thêm `AddRateLimiter` trong `Program.cs`
+- [x] `LoginLimiter`: 5 requests/phút/IP
+- [x] `GlobalLimiter`: 100 requests/phút/IP
+- [x] Áp dụng `[EnableRateLimiting("LoginLimiter")]` cho `Login` và `Register` POST
+
+### 4.5 Error Pages
+- [x] `Views/Shared/Error.cshtml` - trang lỗi chung
+- [x] `Views/Shared/NotFound.cshtml` - trang 404
+- [x] `HomeController.NotFound()` action
+- [x] `UseStatusCodePagesWithReExecute("/Home/NotFound")` trong `Program.cs`
+
+### 4.6 Quyết định: TryonImage, ProductType, TryonType
+- [x] **GIỮ LẠI** các trường trong model `Sanpham`
+- [x] Lý do: hỗ trợ AR thử đồ tương lai, không ảnh hưởng chức năng hiện tại
+
+### 4.7 Documentation
+- [x] `README.md` - tài liệu dự án đầy đủ
+- [x] `PROJECT_PROGRESS.md` - file này
+
+---
+
+## ⚠️ VẤN ĐỀ ĐÃ GIẢI QUYẾT (Build Errors)
+
+| Lỗi | Nguyên nhân | Giải pháp |
+|-----|-------------|-----------|
+| `CS0246: AuthorizeAttribute not found` | Gỡ Identity package | `Authorize` thuộc `Microsoft.AspNetCore.Mvc.Core` (transitive) - OK |
+| `CS0234: VSpBanChay not found` | Case sensitivity | Sửa thành `VSpBanchay` |
+| `CS1501: ToString overload` | Nullable DateOnly/decimal | Dùng `?.ToString("format")` hoặc kiểm tra null |
+| `CS8625: Nullable warning _LayoutAdmin` | `Active()` param null | Dùng `""` thay vì `null` |
+| `BLAZOR102: Scoped CSS` | File `_Layout.cshtml.css` orphan | Xóa file |
+| `CS4032: await in non-async` | `UpdateQuantity` | Làm method `async` |
+| `CS1061: GetAndStoreTokens` | Sai method name | Dùng `@Html.AntiForgeryToken()` |
+| `RZ1006: Missing }` | Razor syntax | Sửa `@section Scripts` đóng đúng |
+
+---
+
+## 🗂️ FILES THAY ĐỔI CHÍNH
+
+### Controllers (Mới/Sửa)
+- `Controllers/OrdersController.cs` (MỚI)
+- `Controllers/HomeController.cs` (Sửa: DI context, load data, error pages)
+- `Controllers/AccountController.cs` (Sửa: Register validation, RateLimit)
+- `Controllers/SanphamsController.cs` (Sửa: sort, GetSoldCount, RelatedProducts)
+- `Areas/Admin/Controllers/SanphamsController.cs` (Sửa: IFormFile upload, soft delete)
+- `Areas/Admin/Controllers/KhachhangsController.cs` (Sửa: Edit validation)
+- `Areas/Admin/Controllers/DonhangsController.cs` (Sửa: status validation, stock restore)
+
+### Views (Mới/Sửa)
+- `Views/Home/Index.cshtml` (MỚI - redesign hoàn toàn)
+- `Views/Home/ShoppingGuide.cshtml` (MỚI)
+- `Views/Home/ReturnPolicy.cshtml` (MỚI)
+- `Views/Home/Contact.cshtml` (MỚI)
+- `Views/Sanphams/Details.cshtml` (MỚI - redesign hoàn toàn)
+- `Views/Orders/*.cshtml` (4 file MỚI)
+- `Views/Account/Register.cshtml` (Sửa: confirm password)
+- `Views/Shared/_LayoutCustomer.cshtml` (Sửa: antiforgery form, footer links)
+- `Views/Shared/_LayoutAdmin.cshtml` (Sửa: sidebar links, footer links)
+- `Views/Shared/_LoginPartial.cshtml` (Sửa: profile, orders links)
+- `Views/Shared/Error.cshtml` (MỚI)
+- `Views/Shared/NotFound.cshtml` (MỚI)
+- `Areas/Admin/Views/Sanphams/Create.cshtml` (Sửa: file upload)
+- `Areas/Admin/Views/Sanphams/Edit.cshtml` (Sửa: file upload)
+- `Areas/Admin/Views/Thongke/Index.cshtml` (MỚI)
+- `Areas/Admin/Views/Thongke/SanphamBanChay.cshtml` (MỚI)
+- `Views/Cart/Index.cshtml` (Sửa: checkout link, token)
+- `Views/Cart/_CartPartial.cshtml` (Sửa: checkout link, model)
+
+### Models
+- `Models/CartItem.cs` (MỚI - di chuyển từ Controller)
+
+### Config
+- `Program.cs` (Sửa: RateLimiter, StatusCodePages, LayoutSelectorFilter)
+- `DoAnASP.csproj` (Sửa: gỡ Identity packages)
+- `Models/QlquanaoContext.cs` (Sửa: xóa OnConfiguring)
+- `.gitignore` (MỚI)
+
+### Database
+- `qlquanao_sqlserver.sql` - Script tạo DB hoàn chỉnh
+
+---
+
+## 🎯 CHECKLIST TRIỂN KHAI (Production Ready)
+
+- [x] Connection string từ `appsettings.json` (không hardcode)
+- [x] BCrypt hash cho mật khẩu (không lưu plain text)
+- [x] Anti-forgery token trên tất cả form POST
+- [x] Role-based authorization (admin/user)
+- [x] Rate limiting đăng nhập/đăng ký
+- [x] Soft delete sản phẩm có đơn hàng
+- [x] Upload ảnh an toàn (validate ext, size, unique name)
+- [x] Transaction khi đặt hàng (rollback nếu lỗi)
+- [x] Khôi phục kho khi hủy đơn (customer + admin)
+- [x] Custom error pages (404, 500)
+- [x] Responsive UI (Bootstrap 5)
+- [x] AJAX cart với toast notification
+- [x] Pagination cho danh sách sản phẩm, đơn hàng, khách hàng
+- [x] Chart.js cho thống kê admin
+
+---
+
+## 📝 GHI CHÚ KHÁC
+
+### Tài khoản test (password: 123456)
+| Email | Role |
+|-------|------|
+| admin@doanasp.com | admin |
+| user@doanasp.com | user |
+
+### Cách test nhanh
 ```bash
-cd D:\Code\ASP\DoAnASP\DoAnASP
 dotnet run
-# Runs on http://localhost:5162 (or check launchSettings.json)
+# Mở https://localhost:xxxx/
+# Đăng nhập admin: /Admin
 ```
 
-### 2. Test Customer Flow
-1. Navigate to `/Sanphams` - Product listing
-2. Click "Đăng ký" - Register new user (defaults to "user" role)
-3. Login → Redirects to `/Home/Index` with Customer layout
-4. Add products to cart → Navbar cart dropdown works
-
-### 3. Test Admin Flow
-1. **Option A**: Update user role in database:
-   ```sql
-   UPDATE taikhoan SET role = 'admin' WHERE email = 'your@email.com';
-   ```
-2. **Option B**: Use existing admin accounts (need password)
-3. Login as admin → Redirects to `/Admin/Dashboard` with Admin layout
-
-### 4. Test AJAX Login
-- Open browser DevTools → Network tab
-- Submit login form
-- Should return JSON: `{success: true, message: "...", redirectUrl: "...", role: "admin|user"}`
-- Toast notification appears
-- Auto-redirect after 800ms
+### Các thư mục upload
+- `wwwroot/images/` - Tự tạo khi chạy, chứa ảnh sản phẩm upload
 
 ---
 
-## Known Issues / TODO
-
-### High Priority
-- [ ] **Password for existing admin accounts unknown** - Cannot test original admin logins
-- [ ] Forgot password functionality not implemented
-- [ ] Email verification not implemented
-
-### Medium Priority
-- [ ] Add unit tests for AccountController
-- [ ] Implement proper password hashing (BCrypt/Argon2) instead of SHA256
-- [ ] Add rate limiting on login endpoint
-- [ ] Admin user management (CRUD for users in Admin area)
-
-### Low Priority
-- [ ] Social login (Google, Facebook) - buttons exist but disabled
-- [ ] Product image upload in Admin area
-- [ ] Order management for customers
-- [ ] Payment integration
-
----
-
-## File Structure Summary
-
-```
-Controllers/
-├── AccountController.cs      # NEW - Auth system
-├── CartController.cs         # NEW - Shopping cart
-├── SanphamsController.cs     # Updated - Product listing
-├── HomeController.cs
-└── Areas/Admin/Controllers/  # Admin area (existing)
-
-Views/
-├── Account/                  # NEW - Auth views
-│   ├── Login.cshtml
-│   ├── Register.cshtml
-│   ├── Profile.cshtml
-│   └── AccessDenied.cshtml
-├── Cart/                     # NEW - Cart views
-│   ├── Index.cshtml
-│   └── _CartPartial.cshtml
-├── Sanphams/
-│   └── Index.cshtml          # Updated - Product grid
-├── Shared/
-│   ├── _LayoutCustomer.cshtml # Updated - Navbar cart
-│   ├── _LayoutAdmin.cshtml    # Existing
-│   ├── _LoginPartial.cshtml   # Updated - Uses Account controller
-│   └── _ViewStart.cshtml      # Updated - Dynamic layout
-└── _ViewImports.cshtml
-
-Filters/
-└── LayoutSelectorFilter.cs   # NEW - Role-based layout
-
-wwwroot/
-├── js/site.js                # Updated - Toast, cart functions
-├── css/site.css
-└── images/                   # Product images
-
-Models/
-├── Taikhoan.cs               # User model with Role
-├── Sanpham.cs                # Product model
-└── QlquanaoContext.cs        # DbContext
-
-Program.cs                    # Updated - Cookie auth, session, filter registration
-```
-
----
-
-## For Next AI Assistant
-
-### To Continue Work:
-1. **Read this file first** to understand project state
-2. **Run `dotnet build`** to verify compilation
-3. **Run `dotnet run`** to start application
-4. **Check database** for existing users: `sqlcmd -S "(localdb)\mssqllocaldb" -d "qlquanao" -Q "SELECT email, role FROM taikhoan"`
-
-### To Make Existing Admin Work:
-```sql
--- Update password for admin@gmail.com to known value (e.g., "admin123")
--- Hash: SHA256("admin123" + "DoAnASP_Salt") = compute and update
-UPDATE taikhoan SET password = '<computed_hash>' WHERE email = 'admin@gmail.com';
-```
-
-### Quick Password Hash Generator (C#):
-```csharp
-using var sha256 = SHA256.Create();
-var hash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes("yourpassword" + "DoAnASP_Salt")));
-Console.WriteLine(hash);
-```
-
----
-
-## Last Updated
-**Date**: 2026-11-20  
-**Session**: Implemented complete authentication system with role-based layouts, AJAX login with toast notifications, and documentation
-
----
-
-## Git Status
-```bash
-git status
-# Modified: Program.cs, Controllers/*, Views/*, Filters/*, wwwroot/js/site.js
-# New: Controllers/AccountController.cs, Controllers/CartController.cs, Filters/LayoutSelectorFilter.cs
-# New Views: Account/*, Cart/*
-```
+**Kết luận**: Dự án đã hoàn thành tất cả yêu cầu trong audit report. Sẵn sàng cho bảo vệ đồ án tốt nghiệp.

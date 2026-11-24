@@ -1,0 +1,182 @@
+@model DoAnASP.Controllers.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4"><i class="bi bi-credit-card"></i> Thanh toán</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Order Summary -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">Tóm tắt đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-3">
+                            <tbody>
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <tr>
+                                        <td class="px-0">
+                                            <div class="d-flex align-items-center">
+                                                <img src="/images/@item.ImageUrl" alt="@item.ProductName"
+                                                     class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;"
+                                                     onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'" />
+                                                <div>
+                                                    <small class="d-block">@item.ProductName</small>
+                                                    <small class="text-muted">x @item.Quantity</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end px-0 fw-medium">@item.Total.ToString("N0") đ</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tạm tính</span>
+                        <span class="fw-bold" id="subtotal">@Model.CartItems.Sum(i => i.Total).ToString("N0") đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Phí vận chuyển</span>
+                        <span class="fw-bold" id="shipping">Miễn phí</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Tổng cộng</span>
+                        <span class="fw-bold text-danger fs-5" id="total">@Model.CartItems.Sum(i => i.Total).ToString("N0") đ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">Thông tin giao hàng</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" asp-action="Checkout" id="checkoutForm">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="tenNguoiNhan" class="form-label fw-medium">Họ tên người nhận <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="tenNguoiNhan" name="TenNguoiNhan" value="@Model.TenNguoiNhan" required autocomplete="name" />
+                                <span asp-validation-for="TenNguoiNhan" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="sdt" class="form-label fw-medium">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="sdt" name="Sdt" value="@Model.Sdt" required autocomplete="tel" />
+                                <span asp-validation-for="Sdt" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="diaChi" class="form-label fw-medium">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="diaChi" name="DiaChi" rows="3" required autocomplete="address-line1">@Model.DiaChi</textarea>
+                                <span asp-validation-for="DiaChi" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row mb-3">
+                            <legend class="col-form-label fw-medium col-12 pt-0">Phương thức thanh toán</legend>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="PhuongThucThanhToan" id="cod" value="cod" @(Model.PhuongThucThanhToan == "cod" ? "checked" : "") required />
+                                    <label class="form-check-label fw-medium" for="cod">
+                                        <i class="bi bi-cash me-2"></i> Thanh toán khi nhận hàng (COD)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="PhuongThucThanhToan" id="chuyen_khoan" value="chuyen_khoan" @(Model.PhuongThucThanhToan == "chuyen_khoan" ? "checked" : "") />
+                                    <label class="form-check-label fw-medium" for="chuyen_khoan">
+                                        <i class="bi bi-bank me-2"></i> Chuyển khoản ngân hàng
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="ghiChu" class="form-label">Ghi chú đơn hàng</label>
+                                <textarea class="form-control" id="ghiChu" name="GhiChu" rows="2" placeholder="Lưu ý cho người bán (tùy chọn)"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Đặt hàng ngay
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("Index", "Cart")" class="text-decoration-none">
+                            <i class="bi bi-arrow-left"></i> Quay lại giỏ hàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('checkoutForm');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function (e) {
+                // Basic client-side validation
+                const requiredFields = form.querySelectorAll('[required]');
+                let valid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        valid = false;
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!valid) {
+                    e.preventDefault();
+                    submitBtn.classList.remove('btn-primary');
+                    submitBtn.classList.add('btn-danger');
+                    setTimeout(() => {
+                        submitBtn.classList.remove('btn-danger');
+                        submitBtn.classList.add('btn-primary');
+                    }, 1000);
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Đang xử lý...';
+                }
+            });
+        });
+    </script>
+}

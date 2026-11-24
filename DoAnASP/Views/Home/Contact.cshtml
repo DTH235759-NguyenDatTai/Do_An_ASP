@@ -1,0 +1,188 @@
+@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Liên hệ</li>
+        </ol>
+    </nav>
+
+    <h1 class="h2 fw-bold mb-4"><i class="bi bi-envelope text-primary me-2"></i>Liên hệ với chúng tôi</h1>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-4"><i class="bi bi-info-circle text-primary me-2"></i>Thông tin liên hệ</h3>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary"><i class="bi bi-geo-alt me-2"></i>Địa chỉ cửa hàng</h6>
+                        <p class="text-muted mb-0">123 Đường ABC, Phường 1, Quận 1, TP. Hồ Chí Minh</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary"><i class="bi bi-telephone me-2"></i>Hotline hỗ trợ</h6>
+                        <p class="text-muted mb-1"><a href="tel:0123456789" class="text-decoration-none fw-bold">0123 456 789</a> (8h00 - 22h00 hàng ngày)</p>
+                        <p class="text-muted mb-0"><a href="tel:0987654321" class="text-decoration-none">0987 654 321</a> (Zalo/Line)</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary"><i class="bi bi-envelope me-2"></i>Email</h6>
+                        <p class="text-muted mb-1"><a href="mailto:support@doanasp.com" class="text-decoration-none">support@doanasp.com</a> (Phản hồi trong 24h)</p>
+                        <p class="text-muted mb-0"><a href="mailto:sales@doanasp.com" class="text-decoration-none">sales@doanasp.com</a> (Hợp tác kinh doanh)</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-primary"><i class="bi bi-clock me-2"></i>Giờ làm việc</h6>
+                        <p class="text-muted mb-0">Thứ 2 - Chủ Nhật: 8h00 - 22h00</p>
+                    </div>
+
+                    <div>
+                        <h6 class="fw-bold text-primary"><i class="bi bi-facebook me-2"></i>Mạng xã hội</h6>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-muted fs-4" title="Facebook"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="text-muted fs-4" title="Instagram"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="text-muted fs-4" title="TikTok"><i class="bi bi-tiktok"></i></a>
+                            <a href="#" class="text-muted fs-4" title="YouTube"><i class="bi bi-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-4"><i class="bi bi-chat-dots text-primary me-2"></i>Gửi tin nhắn cho chúng tôi</h3>
+
+                    <form>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Họ tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Nguyễn Văn A" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" placeholder="0901 234 567" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" placeholder="email@example.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Chủ đề <span class="text-danger">*</span></label>
+                                <select class="form-select" required>
+                                    <option value="" disabled selected>Chọn chủ đề</option>
+                                    <option value="order">Hỏi về đơn hàng</option>
+                                    <option value="product">Tư vấn sản phẩm</option>
+                                    <option value="return">Đổi trả / Hoàn tiền</option>
+                                    <option value="shipping">Vận chuyển / Giao hàng</option>
+                                    <option value="payment">Thanh toán</option>
+                                    <option value="complaint">Khiếu nại</option>
+                                    <option value="other">Khác</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Nội dung <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="5" placeholder="Mô tả chi tiết vấn đề của bạn..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-send me-2"></i>Gửi tin nhắn
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3"><i class="bi bi-map text-primary me-2"></i>Bản đồ cửa hàng</h3>
+                    <div class="ratio ratio-16x9 rounded overflow-hidden">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.531829483376!2d106.68828417477204!3d10.776940258144025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3c9e8b1d8d%3A0x123456789abcdef!2zMTIzIEJpbiBBQyBQaMaw4budbmcgMSwgUXVhbiAxLCBI4buTIENow60gTWluaCwgVmnDtCBOYW0!5e0!3m2!1svi!2s!4v1234567890" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3"><i class="bi bi-question-circle text-primary me-2"></i>Câu hỏi thường gặp (FAQ)</h3>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item border-0 bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Làm thế nào để biết size phù hợp?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Mỗi sản phẩm có bảng size chi tiết trong phần mô tả. Bạn nên đo số liệu cơ thể và so sánh với bảng size. Nếu vẫn băn khoăn, hãy liên hệ hotline để được tư vấn.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Giao hàng mất bao lâu?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Nội thành TP.HCM: 1-2 ngày. Tỉnh thành khác: 2-5 ngày. Bạn sẽ được thông báo mã vận đơn để theo dõi.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Có thể thanh toán qua ngân hàng không?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Hiện tại chúng tôi hỗ trợ thanh toán khi nhận hàng (COD). Chúng tôi đang phát triển cổng thanh toán online, sẽ cập nhật sớm nhất.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    Đổi trả như thế nào?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Xem chi tiết tại <a href="@Url.Action("ReturnPolicy")" class="text-decoration-none">Chính sách đổi trả</a> hoặc liên hệ hotline để được hướng dẫn quy trình.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 bg-transparent">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                    Sản phẩm có bảo hành không?
+                                </button>
+                            </h2>
+                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Quần áo không có bảo hành chính hãng. Tuy nhiên, nếu sản phẩm lỗi từ nhà sản xuất (rách đường may, bong trơn, mất màu nhanh...), chúng tôi hỗ trợ đổi trả trong 7 ngày.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

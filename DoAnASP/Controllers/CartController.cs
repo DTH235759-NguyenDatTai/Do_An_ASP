@@ -28,6 +28,11 @@ namespace DoAnASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
+            if (quantity < 1)
+            {
+                return Json(new { success = false, message = "Số lượng phải lớn hơn 0" });
+            }
+
             var product = await _context.Sanphams.FindAsync(productId);
 
             if (product == null)
@@ -78,7 +83,7 @@ namespace DoAnASP.Controllers
         // POST: Cart/UpdateQuantity
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateQuantity(int productId, int quantity)
+        public async Task<IActionResult> UpdateQuantity(int productId, int quantity)
         {
             var cart = GetCart();
             var item = cart.FirstOrDefault(c => c.ProductId == productId);
@@ -91,7 +96,20 @@ namespace DoAnASP.Controllers
                 }
                 else
                 {
-                    item.Quantity = quantity;
+                    // Kiểm tra tồn kho khi cập nhật số lượng
+                    var product = await _context.Sanphams.FindAsync(productId);
+                    if (product != null && quantity > product.Soluong)
+                    {
+                        quantity = product.Soluong;
+                    }
+                    if (quantity <= 0 || product == null)
+                    {
+                        cart.Remove(item);
+                    }
+                    else
+                    {
+                        item.Quantity = quantity;
+                    }
                 }
                 SaveCart(cart);
             }
@@ -166,15 +184,5 @@ namespace DoAnASP.Controllers
             var cartJson = System.Text.Json.JsonSerializer.Serialize(cart);
             HttpContext.Session.SetString(CartSessionKey, cartJson);
         }
-    }
-
-    public class CartItem
-    {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public string ImageUrl { get; set; } = string.Empty;
-        public int Quantity { get; set; }
-        public decimal Total => Price * Quantity;
     }
 }

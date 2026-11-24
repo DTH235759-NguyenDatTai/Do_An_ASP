@@ -1,0 +1,155 @@
+@model IEnumerable<DoAnASP.Models.Donhang>
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4"><i class="bi bi-bag-check"></i> Đơn hàng của tôi</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-bag-x display-1 text-muted"></i>
+            <h3 class="mt-3 text-muted">Chưa có đơn hàng nào</h3>
+            <p class="text-muted">Bạn chưa từng đặt hàng. Hãy bắt đầu mua sắm ngay!</p>
+            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-primary mt-3">
+                <i class="bi bi-bag-plus"></i> Mua sắm ngay
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th scope="col" style="width: 100px;">Mã đơn</th>
+                                <th scope="col">Ngày đặt</th>
+                                <th scope="col" style="width: 150px;">Trạng thái</th>
+                                <th scope="col" class="text-end" style="width: 150px;">Tổng tiền</th>
+                                <th scope="col" style="width: 180px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var statusBadge = item.TrangThai switch
+                                {
+                                    "dang_xu_ly" => "bg-warning text-dark",
+                                    "da_giao" => "bg-success",
+                                    "huy" => "bg-secondary",
+                                    _ => "bg-info"
+                                };
+
+                                <tr>
+                                    <td class="align-middle fw-bold">#@item.Id</td>
+                                    <td class="align-middle">@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="align-middle">
+                                        <span class="badge @statusBadge">
+                                            @(item.TrangThai == "dang_xu_ly" ? "Đang xử lý" :
+                                              item.TrangThai == "da_giao" ? "Đã giao" :
+                                              item.TrangThai == "huy" ? "Đã hủy" : item.TrangThai)
+                                        </span>
+                                    </td>
+                                    <td class="align-middle text-end text-danger fw-bold">@item.TongTien.ToString("N0") đ</td>
+                                    <td class="align-middle">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="@Url.Action("Details", "Orders", new { id = item.Id })"
+                                               class="btn btn-outline-primary" title="Xem chi tiết">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            @if (item.TrangThai == "dang_xu_ly")
+                                            {
+                                                <form method="post" asp-action="Cancel" asp-route-id="@item.Id" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Tồn kho sẽ được hoàn lại.');">
+                                                    <button type="submit" class="btn btn-outline-danger" title="Hủy đơn">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav aria-label="Order pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("MyOrders", "Orders", new { page = ViewBag.CurrentPage - 1 })"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    @{
+                        int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+                        int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+
+                        if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("MyOrders", "Orders", new { page = 1 })">1</a>
+                            </li>
+                            if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("MyOrders", "Orders", new { page = i })">@i</a>
+                            </li>
+                        }
+
+                        if (endPage < ViewBag.TotalPages)
+                        {
+                            if (endPage < ViewBag.TotalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("MyOrders", "Orders", new { page = ViewBag.TotalPages })">@ViewBag.TotalPages</a>
+                            </li>
+                        }
+                    }
+
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("MyOrders", "Orders", new { page = ViewBag.CurrentPage + 1 })"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+</div>

@@ -1,8 +1,128 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Trang chủ";
+
+    // Helper function to get correct image URL
+    Func<string, string> GetImageUrl = (hinhAnh) =>
+    {
+        if (string.IsNullOrEmpty(hinhAnh))
+            return "https://via.placeholder.com/300x200?text=No+Image";
+
+        if (hinhAnh.StartsWith("http") || hinhAnh.StartsWith("/"))
+            return hinhAnh;
+
+        return "/images/" + hinhAnh;
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="hero-section position-relative mb-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold text-white mb-3">Thời trang chất lượng, giá tốt</h1>
+                <p class="lead text-white-50 mb-4">Khám phá bộ sưu tập quần áo mới nhất: Áo, Quần, Váy, Đồ bộ, Giày dép với chất liệu cao cấp, phong cách trẻ trung.</p>
+                <a href="@Url.Action("Index", "Sanphams")" class="btn btn-light btn-lg px-4 fw-medium">
+                    <i class="bi bi-shop-window me-2"></i> Mua sắm ngay
+                </a>
+            </div>
+            <div class="col-lg-6 text-center d-none d-lg-block">
+                <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=Fashion+Collection" alt="Fashion Collection" class="img-fluid rounded shadow" style="max-height: 400px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="mb-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3 fw-bold mb-0">Danh mục sản phẩm</h2>
+            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-outline-primary btn-sm">Xem tất cả</a>
+        </div>
+        <div class="row g-3">
+            @foreach (var loai in new[] { "Áo", "Quần", "Váy", "Đồ bộ", "Giày dép" })
+            {
+                var loaiIcon = loai switch
+                {
+                    "Áo" => "bi-tshirt",
+                    "Quần" => "bi-pants",
+                    "Váy" => "bi-gender-female",
+                    "Đồ bộ" => "bi-bag-heart",
+                    "Giày dép" => "bi-shoe",
+                    _ => "bi-box-seam"
+                };
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="@Url.Action("Index", "Sanphams", new { loaiSp = loai })" class="text-decoration-none text-dark category-card d-block p-3 rounded-3 bg-white shadow-sm h-100 transition">
+                        <div class="text-center">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="bi @loaiIcon fs-3"></i>
+                            </div>
+                            <h6 class="fw-bold mb-0">@loai</h6>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="p-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-truck fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Miễn phí vận chuyển</h5>
+                    <p class="text-muted small mb-0">Đơn hàng từ 500.000đ</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-shield-check fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Đổi trả dễ dàng</h5>
+                    <p class="text-muted small mb-0">7 ngày đổi trả</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-credit-card-2-front fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Thanh toán COD</h5>
+                    <p class="text-muted small mb-0">Thanh toán khi nhận hàng</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-4">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-headset fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Hỗ trợ 24/7</h5>
+                    <p class="text-muted small mb-0">Hotline: 0123 456 789</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .category-card {
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    .category-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+        border-color: #0d6efd;
+    }
+    .transition {
+        transition: all 0.3s ease;
+    }
+</style>

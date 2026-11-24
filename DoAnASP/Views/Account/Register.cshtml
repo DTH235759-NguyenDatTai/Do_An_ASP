@@ -3,32 +3,44 @@
 }
 <div class="row justify-content-center">
     <div class="col-md-5">
-        <h2 class="mb-3">Đăng ký</h2>
-        @if (ViewBag.Error != null) { <div class="alert alert-danger">@ViewBag.Error</div> }
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="mb-4 text-center">Đăng ký tài khoản</h2>
+                @if (ViewBag.Error != null) { <div class="alert alert-danger">@ViewBag.Error</div> }
 
-        <form asp-action="Register" method="post">
-            <div class="mb-3">
-                <label class="form-label">Họ tên</label>
-                <input name="name" class="form-control" required maxlength="100" />
+                <form asp-action="Register" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Họ tên <span class="text-danger">*</span></label>
+                        <input name="name" class="form-control" required maxlength="100" placeholder="Nguyễn Văn A" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Email <span class="text-danger">*</span></label>
+                        <input name="email" type="email" class="form-control" required maxlength="100" placeholder="email@example.com" />
+                        <div class="form-text">Email sẽ được dùng để đăng nhập và nhận thông báo đơn hàng</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Mật khẩu <span class="text-danger">*</span></label>
+                        <input name="password" type="password" class="form-control" required minlength="6" placeholder="Tối thiểu 6 ký tự" />
+                        <div class="form-text">Mật khẩu phải có ít nhất 6 ký tự</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                        <input name="confirmPassword" type="password" class="form-control" required minlength="6" placeholder="Nhập lại mật khẩu" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Số điện thoại</label>
+                        <input name="sdt" class="form-control" maxlength="15" placeholder="0901 234 567" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Địa chỉ</label>
+                        <input name="diaChi" class="form-control" maxlength="255" placeholder="Số nhà, đường, quận, thành phố" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-person-plus me-1"></i> Đăng ký
+                    </button>
+                </form>
+                <p class="mt-3 text-center text-muted">Đã có tài khoản? <a asp-action="Login" class="fw-medium">Đăng nhập ngay</a></p>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input name="email" type="email" class="form-control" required maxlength="100" />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Mật khẩu (tối thiểu 6 ký tự)</label>
-                <input name="password" type="password" class="form-control" required minlength="6" />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Số điện thoại</label>
-                <input name="sdt" class="form-control" maxlength="15" />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Địa chỉ</label>
-                <input name="diaChi" class="form-control" maxlength="255" />
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
-        </form>
-        <p class="mt-3 text-center">Đã có tài khoản? <a asp-action="Login">Đăng nhập</a></p>
+        </div>
     </div>
 </div>

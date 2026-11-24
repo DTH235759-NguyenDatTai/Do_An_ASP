@@ -40,6 +40,9 @@
 </head>
 <body id="top" class="d-flex flex-column min-vh-100">
 
+    <!-- Anti-forgery token for AJAX cart operations -->
+    <form id="antiforgery-form" style="display:none;">@Html.AntiForgeryToken()</form>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
         <div class="container px-4 px-lg-5">
@@ -100,9 +103,9 @@
                 </div>
                 <div class="col-md-3">
                     <h5 class="text-light">HỖ TRỢ</h5>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Hướng dẫn mua hàng</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Chính sách đổi trả</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Liên hệ</a>
+                    <a href="@Url.Action("ShoppingGuide", "Home")" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Hướng dẫn mua hàng</a>
+                    <a href="@Url.Action("ReturnPolicy", "Home")" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Chính sách đổi trả</a>
+                    <a href="@Url.Action("Contact", "Home")" class="list-group-item list-group-item-action bg-transparent text-light border-0 py-1">Liên hệ</a>
                 </div>
             </div>
             <hr class="border-secondary">

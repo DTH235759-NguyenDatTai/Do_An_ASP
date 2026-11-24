@@ -1,0 +1,132 @@
+@{
+    ViewData["Title"] = "Chính sách đổi trả";
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chính sách đổi trả</li>
+        </ol>
+    </nav>
+
+    <h1 class="h2 fw-bold mb-4"><i class="bi bi-arrow-return-left text-primary me-2"></i>Chính sách đổi trả & Hoàn tiền</h1>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="alert alert-success mb-4">
+                <h5 class="fw-bold"><i class="bi bi-shield-check me-2"></i>Cam kết: Đổi trả dễ dàng trong 7 ngày</h5>
+                <p class="mb-0">Chúng tôi muốn bạn hài lòng 100% với sản phẩm. Nếu không thích, bạn có thể đổi trả trong vòng 7 ngày kể từ ngày nhận hàng.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-primary mb-3"><i class="bi bi-check-circle-fill me-2"></i>Điều kiện được đổi trả</h3>
+                    <ul class="mb-0">
+                        <li>Sản phẩm còn nguyên tem, nhãn mác, bao bì gốc</li>
+                        <li>Chưa giặt, chưa sử dụng, không rách, không dơ bẩn</li>
+                        <li>Đầy đủ phụ kiện kèm theo (nếu có)</li>
+                        <li>Trong vòng 7 ngày kể từ ngày nhận hàng</li>
+                        <li>Có hóa đơn mua hàng hoặc mã đơn hàng</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-primary mb-3"><i class="bi bi-x-circle-fill me-2"></i>Không được đổi trả</h3>
+                    <ul class="mb-0">
+                        <li>Sản phẩm đã giặt, đã mặc, đã sử dụng</li>
+                        <li>Mất tem, nhãn mác, bao bì gốc</li>
+                        <li>Sản phẩm bị hỏng do sự bất cẩn của khách hàng</li>
+                        <li>Quà tặng, sản phẩm khuyến mãi (nếu có ghi chú không đổi trả)</li>
+                        <li>Đồ lót, đồ spandex, bikini, áo ngực (vệ sinh cá nhân)</li>
+                        <li>Quá hạn 7 ngày đổi trả</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-primary mb-3"><i class="bi bi-arrow-repeat me-2"></i>Quy trình đổi trả</h3>
+                    <ol class="mb-0">
+                        <li><strong>Liên hệ:</strong> Gọi hotline <strong>0123 456 789</strong> hoặc email <strong>support@doanasp.com</strong> để đăng ký đổi trả</li>
+                        <li><strong>Xác nhận:</strong> Nhân viên xác nhận và hướng dẫn đóng gói sản phẩm</li>
+                        <li><strong>Thu hồi:</strong> Shipper đến lấy hàng tại địa chỉ của bạn (miễn phí thu hồi nếu lỗi từ chúng tôi)</li>
+                        <li><strong>Kiểm tra:</strong> Kho kiểm tra trạng thái sản phẩm trong 1-2 ngày</li>
+                        <li><strong>Xử lý:</strong> Đổi sản phẩm mới / Hoàn tiền về tài khoản/ví điện tử</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-primary mb-3"><i class="bi bi-cash-stack me-2"></i>Hình thức hoàn tiền</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="fw-bold"><i class="bi bi-credit-card me-2"></i>Thẻ/Ví điện tử</h6>
+                                <p class="text-muted small mb-0">Hoàn về thẻ/ví gốc trong 3-7 ngày làm việc</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="fw-bold"><i class="bi bi-bank me-2"></i>Chuyển khoản</h6>
+                                <p class="text-muted small mb-0">Cung cấp STK, hoàn trong 1-3 ngày làm việc</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="fw-bold"><i class="bi bi-gift me-2"></i>Đổi sản phẩm khác</h6>
+                                <p class="text-muted small mb-0">Đổi size/màu khác hoặc sản phẩm cùng giá trị</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="fw-bold"><i class="bi bi-wallet me-2"></i>Ví nội bộ</h6>
+                                <p class="text-muted small mb-0">Nạp vào tài khoản web để mua lần sau</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold text-primary mb-3"><i class="bi bi-truck me-2"></i>Chi phí vận chuyển đổi trả</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-success bg-opacity-10 rounded">
+                                <h6 class="fw-bold text-success"><i class="bi bi-check me-2"></i>Miễn phí (Chúng tôi chịu)</h6>
+                                <ul class="mb-0 small">
+                                    <li>Sản phẩm sai mô tả, sai size, sai màu</li>
+                                    <li>Sản phẩm lỗi, hỏng từ nhà sản xuất</li>
+                                    <li>Thiếu phụ kiện so với mô tả</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-warning bg-opacity-10 rounded">
+                                <h6 class="fw-bold text-warning"><i class="bi bi-info me-2"></i>Khách chịu (Đổi size/màu/ý thích)</h6>
+                                <ul class="mb-0 small">
+                                    <li>Phí ship đi + về: ~40.000 - 60.000đ</li>
+                                    <li>Tùy khu vực và trọng lượng sản phẩm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <h5 class="fw-bold"><i class="bi bi-exclamation-triangle me-2"></i>Lưu ý đặc biệt</h5>
+                <ul class="mb-0">
+                    <li>Vui lòng thử sản phẩm nhẹ nhàng, không gỡ tem, không giặt trước khi quyết định giữ</li>
+                    <li>Giữ lại hộp, túi, tem mác để đảm bảo quyền lợi đổi trả</li>
+                    <li>Quà tặng kèm đơn hàng (nếu có) phải trả lại cùng sản phẩm</li>
+                    <li>Chúng tôi có quyền từ chối đổi trả nếu sản phẩm không đạt điều kiện</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

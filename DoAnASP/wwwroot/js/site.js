@@ -17,7 +17,7 @@ function addToCart(productId, quantity = 1) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                'RequestVerificationToken': document.querySelector('#antiforgery-form input[name="__RequestVerificationToken"]')?.value || ''
             },
             body: `productId=${productId}&quantity=${quantity}`
         })

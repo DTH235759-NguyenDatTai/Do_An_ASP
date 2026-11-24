@@ -118,7 +118,10 @@
                 <a href="@Url.Action("Index", "Donhangs", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
             </div>
             <div class="card-body p-0">
-                @if (ViewBag.DonHangMoiNhat != null && ViewBag.DonHangMoiNhat.Any())
+                @{
+    var donHangMoiNhat = ViewBag.DonHangMoiNhat as System.Collections.Generic.IEnumerable<DoAnASP.Models.Donhang>;
+}
+@if (donHangMoiNhat != null && donHangMoiNhat.Any())
                 {
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
@@ -133,14 +136,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var dh in ViewBag.DonHangMoiNhat)
+                                @foreach (var dh in donHangMoiNhat)
                                 {
                                     var badgeClass = dh.TrangThai switch
                                     {
                                         "dang_xu_ly" => "bg-warning text-dark",
                                         "dang_giao" => "bg-info",
                                         "da_giao" => "bg-success",
-                                        "da_huy" => "bg-danger",
+                                        "huy" => "bg-danger",
                                         _ => "bg-secondary"
                                     };
                                     <tr>
@@ -158,7 +161,7 @@
                                                     "dang_xu_ly" => "Đang xử lý",
                                                     "dang_giao" => "Đang giao",
                                                     "da_giao" => "Đã giao",
-                                                    "da_huy" => "Đã hủy",
+                                                    "huy" => "Đã hủy",
                                                     _ => dh.TrangThai
                                                 })
                                             </span>
@@ -191,10 +194,13 @@
                 <a href="@Url.Action("SanphamBanChay", "Thongke", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
             </div>
             <div class="card-body p-0">
-                @if (ViewBag.SpBanChay != null && ViewBag.SpBanChay.Any())
+                @{
+    var spBanChay = ViewBag.SpBanChay as System.Collections.Generic.IEnumerable<DoAnASP.Models.VSpBanchay>;
+}
+@if (spBanChay != null && spBanChay.Any())
                 {
                     <div class="list-group list-group-flush">
-                        @foreach (var sp in ViewBag.SpBanChay)
+                        @foreach (var sp in spBanChay)
                         {
                             <div class="list-group-item px-3 py-2">
                                 <div class="d-flex align-items-center">

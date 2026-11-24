@@ -56,12 +56,12 @@
         Hiển thị <strong>@ViewBag.TotalItems</strong> sản phẩm
     </div>
     <div class="btn-group btn-group-sm" role="group">
-        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = 1 })"
-           class="btn btn-outline-secondary @(ViewBag.CurrentPage == 1 ? "active" : "")">Mới nhất</a>
-        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = 1, sort = "price_asc" })"
-           class="btn btn-outline-secondary">Giá thấp đến cao</a>
-        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = 1, sort = "price_desc" })"
-           class="btn btn-outline-secondary">Giá cao đến thấp</a>
+        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = "", page = 1 })"
+           class="btn btn-outline-secondary @((ViewBag.Sort as string ?? "") == "" ? "active" : "")">Mới nhất</a>
+        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = "price_asc", page = 1 })"
+           class="btn btn-outline-secondary @((ViewBag.Sort as string ?? "") == "price_asc" ? "active" : "")">Giá thấp đến cao</a>
+        <a href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = "price_desc", page = 1 })"
+           class="btn btn-outline-secondary @((ViewBag.Sort as string ?? "") == "price_desc" ? "active" : "")">Giá cao đến thấp</a>
     </div>
 </div>
 
@@ -144,7 +144,7 @@
                 <!-- Previous -->
                 <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
                     <a class="page-link"
-                       href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = ViewBag.CurrentPage - 1 })"
+                       href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = ViewBag.Sort, page = ViewBag.CurrentPage - 1 })"
                        aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
@@ -159,7 +159,7 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = 1 })">1</a>
+                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = ViewBag.Sort, page = 1 })">1</a>
                         </li>
                         if (startPage > 2)
                         {
@@ -171,7 +171,7 @@
                     {
                         <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
                             <a class="page-link"
-                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = i })">@i</a>
+                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = ViewBag.Sort, page = i })">@i</a>
                         </li>
                     }
 
@@ -183,7 +183,7 @@
                         }
                         <li class="page-item">
                             <a class="page-link"
-                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = ViewBag.TotalPages })">@ViewBag.TotalPages</a>
+                               href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = ViewBag.Sort, page = ViewBag.TotalPages })">@ViewBag.TotalPages</a>
                         </li>
                     }
                 }
@@ -191,7 +191,7 @@
                 <!-- Next -->
                 <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
                     <a class="page-link"
-                       href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, page = ViewBag.CurrentPage + 1 })"
+                       href="@Url.Action("Index", "Sanphams", new { searchString = ViewBag.SearchString, loaiSp = ViewBag.LoaiSp, sort = ViewBag.Sort, page = ViewBag.CurrentPage + 1 })"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>

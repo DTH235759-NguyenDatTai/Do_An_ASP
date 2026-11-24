@@ -1,101 +1,289 @@
 @model DoAnASP.Models.Sanpham
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model?.TenSp ?? "Chi tiết sản phẩm";
+
+    // Helper function to get correct image URL
+    Func<string?, string> GetImageUrl = (hinhAnh) =>
+    {
+        if (string.IsNullOrEmpty(hinhAnh))
+            return "https://via.placeholder.com/500x400?text=No+Image";
+
+        if (hinhAnh.StartsWith("http") || hinhAnh.StartsWith("/"))
+            return hinhAnh;
+
+        return "/images/" + hinhAnh;
+    };
 }
 
-<h1>Details</h1>
+@if (Model == null)
+{
+    <div class="container py-5">
+        <div class="alert alert-danger text-center">
+            <h4>Không tìm thấy sản phẩm</h4>
+            <a href="@Url.Action("Index", "Sanphams")" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
+        </div>
+    </div>
+}
+else
+{
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Sanphams")">Sản phẩm</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Sanphams", new { loaiSp = Model.LoaiSp })">@Model.LoaiSp</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.TenSp</li>
+        </ol>
+    </nav>
 
-<div>
-    <h4>Sanpham</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenSp)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenSp)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LoaiSp)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LoaiSp)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GtSp)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GtSp)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Soluong)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Soluong)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gia)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gia)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HinhAnh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HinhAnh)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MoTa)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MoTa)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NgayDang)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NgayDang)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TryonImage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TryonImage)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductType)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TryonType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TryonType)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Chitietdonhangs)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Chitietdonhangs)
-        </dd>
-    </dl>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Product Gallery -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div id="productMainImage" class="carousel slide" data-bs-ride="false">
+                        <div class="carousel-inner rounded">
+                            <div class="carousel-item active">
+                                <img src="@GetImageUrl(Model.HinhAnh)" class="d-block w-100" alt="@Model.TenSp"
+                                     style="height: 500px; object-fit: contain; background: #f8f9fa;"
+                                     onerror="this.src='https://via.placeholder.com/600x500?text=No+Image'" />
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.TryonImage))
+                            {
+                                <div class="carousel-item">
+                                    <img src="@GetImageUrl(Model.TryonImage)" class="d-block w-100" alt="@Model.TenSp - Thử đồ"
+                                         style="height: 500px; object-fit: contain; background: #f8f9fa;" />
+                                </div>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.TryonImage))
+                        {
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productMainImage" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Trước</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productMainImage" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Sau</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail images -->
+            @if (!string.IsNullOrEmpty(Model.TryonImage))
+            {
+                <div class="row g-2 mt-3">
+                    <div class="col-6">
+                        <button class="btn btn-outline-secondary w-100 p-1 active-thumbnail" data-bs-target="#productMainImage" data-bs-slide-to="0" aria-label="Ảnh chính">
+                            <img src="@GetImageUrl(Model.HinhAnh)" class="img-fluid rounded" alt="Ảnh chính" style="height: 80px; object-fit: cover;" />
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-outline-secondary w-100 p-1" data-bs-target="#productMainImage" data-bs-slide-to="1" aria-label="Ảnh thử đồ">
+                            <img src="@GetImageUrl(Model.TryonImage)" class="img-fluid rounded" alt="Ảnh thử đồ" style="height: 80px; object-fit: cover;" />
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 p-lg-5">
+                    <!-- Category Badge -->
+                    <div class="mb-3">
+                        <span class="badge bg-secondary fs-6 px-3 py-2">@Model.LoaiSp</span>
+                        <span class="badge bg-info text-dark fs-6 px-3 py-2 ms-2">@Model.GtSp</span>
+                    </div>
+
+                    <!-- Product Name -->
+                    <h1 class="fw-bold mb-3">@Model.TenSp</h1>
+
+                    <!-- Price -->
+                    <div class="mb-4">
+                        <span class="text-danger fw-bold fs-2">@Model.Gia.ToString("N0") đ</span>
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div class="mb-4">
+                        @if (Model.Soluong > 0)
+                        {
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                <i class="bi bi-check-circle"></i> Còn hàng (@Model.Soluong sản phẩm)
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger fs-6 px-3 py-2">
+                                <i class="bi bi-x-circle"></i> Hết hàng
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Description -->
+                    @if (!string.IsNullOrEmpty(Model.MoTa))
+                    {
+                        <div class="mb-4 p-3 bg-light rounded">
+                            <h6 class="fw-bold mb-2"><i class="bi bi-info-circle"></i> Mô tả sản phẩm</h6>
+                            <p class="mb-0 text-muted">@Model.MoTa</p>
+                        </div>
+                    }
+
+                    <!-- Quantity & Add to Cart -->
+                    @if (Model.Soluong > 0)
+                    {
+                        <div class="d-flex gap-3 mb-4">
+                            <div class="input-group" style="max-width: 150px;">
+                                <label for="quantity" class="input-group-text fw-medium">Số lượng</label>
+                                <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1" min="1" max="@Model.Soluong" />
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg flex-grow-1" onclick="addToCart(@Model.Id, document.getElementById('quantity').value)">
+                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
+                            </button>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-secondary flex-grow-1" onclick="buyNow(@Model.Id, document.getElementById('quantity').value)">
+                                <i class="bi bi-lightning"></i> Mua ngay
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-0">
+                            <i class="bi bi-exclamation-triangle"></i> Sản phẩm hiện đã hết hàng.
+                        </div>
+                    }
+
+                    <hr />
+
+                    <!-- Product Meta -->
+                    <div class="row text-muted small">
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Đã bán:</strong> <span id="soldCount">-</span></p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Ngày đăng:</strong> @Model.NgayDang.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (ViewBag.RelatedProducts != null && ViewBag.RelatedProducts.Any())
+    {
+        <div class="mt-5">
+            <h3 class="mb-4"><i class="bi bi-heart"></i> Sản phẩm liên quan</h3>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                @foreach (var item in ViewBag.RelatedProducts)
+                {
+                    <div class="col">
+                        <div class="card product-card h-100 border-0 shadow-sm">
+                            <a href="@Url.Action("Details", "Sanphams", new { id = item.Id })" class="text-decoration-none text-dark">
+                                <img src="@GetImageUrl(item.HinhAnh ?? string.Empty)" class="card-img-top product-img" alt="@item.TenSp"
+                                     onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'" />
+                            </a>
+                            @if (item.Soluong <= 0)
+                            {
+                                <span class="badge bg-danger position-absolute top-0 end-0 m-2">Hết hàng</span>
+                            }
+                            <div class="card-body d-flex flex-column">
+                                <span class="badge bg-secondary mb-2 align-self-start">@item.LoaiSp</span>
+                                <h5 class="card-title">
+                                    <a href="@Url.Action("Details", "Sanphams", new { id = item.Id })" class="text-dark text-decoration-none">
+                                        @item.TenSp
+                                    </a>
+                                </h5>
+                                <div class="d-flex justify-content-between align-items-center mb-3 mt-auto">
+                                    <span class="text-danger fw-bold fs-5">@item.Gia.ToString("N0") đ</span>
+                                    <small class="text-muted">@(item.Soluong > 0 ? $"Còn {item.Soluong}" : "Hết hàng")</small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Action("Details", "Sanphams", new { id = item.Id })"
+                                       class="btn btn-outline-primary flex-grow-1">
+                                        <i class="bi bi-eye"></i> Xem chi tiết
+                                    </a>
+                                    @if (item.Soluong > 0)
+                                    {
+                                        <button type="button" class="btn btn-primary flex-grow-1"
+                                                onclick="addToCart(@item.Id)">
+                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-secondary flex-grow-1" disabled>
+                                            <i class="bi bi-x-circle"></i> Hết hàng
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @if (Model != null)
+    {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch sold count for this product
+            fetch('/Sanphams/GetSoldCount/@Model.Id')
+                .then(response => response.json())
+                .then(data => {
+                    const el = document.getElementById('soldCount');
+                    if (el) {
+                        el.textContent = data.count + ' sản phẩm';
+                    }
+                })
+                .catch(() => {
+                    const el = document.getElementById('soldCount');
+                    if (el) el.textContent = 'Đang cập nhật...';
+                });
+
+            // Buy now - redirect to checkout with single item
+            window.buyNow = function (productId, quantity) {
+                // Add to cart first, then redirect to checkout
+                fetch('/Cart/AddToCart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('#antiforgery-form input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: `productId=${productId}&quantity=${quantity}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/Orders/Checkout';
+                    } else {
+                        alert(data.message || 'Không thể thêm vào giỏ hàng');
+                    }
+                })
+                .catch(() => alert('Đã có lỗi xảy ra'));
+            };
+        });
+    </script>
+    }
+}

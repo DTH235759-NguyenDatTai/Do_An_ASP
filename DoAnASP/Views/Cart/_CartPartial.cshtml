@@ -1,4 +1,4 @@
-@model List<DoAnASP.Controllers.CartItem>
+@model List<DoAnASP.Models.CartItem>
 
 @{
     // Helper function to get correct image URL
@@ -45,7 +45,7 @@
             <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-primary w-100 mb-2">
                 <i class="bi bi-cart"></i> Xem giỏ hàng
             </a>
-            <a href="@Url.Action("Checkout", "Donhangs")" class="btn btn-primary w-100">
+            <a href="@Url.Action("Checkout", "Orders")" class="btn btn-primary w-100">
                 <i class="bi bi-credit-card"></i> Thanh toán
             </a>
         </div>

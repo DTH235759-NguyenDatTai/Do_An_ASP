@@ -11,6 +11,12 @@
         <span class="nav-link text-white">Xin chào, @User.Identity.Name</span>
     </li>
     <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Profile">Hồ sơ của tôi</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Orders" asp-action="MyOrders">Đơn hàng của tôi</a>
+    </li>
+    <li class="nav-item">
         <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
             <button type="submit" class="nav-link btn btn-link text-white">Đăng xuất</button>
         </form>
